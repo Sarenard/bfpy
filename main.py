@@ -15,9 +15,13 @@ with open(args.file, 'r') as f:
 generateur = Generateur(code, args.debug)
 generateur.generate_instructions()
 
-if not args.noti : interpreter(generateur.instructions, args.debugi)
+clean_bf = "".join([x for x in generateur.instructions if x in ['+', '-', '<', '>', '.', ',', '[', ']']])
 
 if args.debug and not args.noti : print("[INFO] INTERPRETATION")
+if args.debug and not args.noti : print(f"[INFO] instructions : {clean_bf}")
+
+if not args.noti : interpreter(generateur.instructions, args.debugi)
+
 
 with open('sortie.bf', 'w', encoding="utf-8") as f:
     f.write(generateur.instructions)

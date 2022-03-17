@@ -1,2 +1,7 @@
 #include modules/std.bfr
 
+4 var1 set
+3 var2 set
+0 var3 set
+var3 var2 var1 add
+var3 printinteger

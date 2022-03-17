@@ -1,3 +1,4 @@
 macro print_raw temp1_print_raw set temp1_print_raw printinteger end
 macro add ram1 load ram2 load ram1 ram2 + store_result end
 macro doubler dup add end
+macro direct_print temp1_direct_print set temp1_direct_print printinteger end
