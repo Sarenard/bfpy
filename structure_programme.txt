@@ -1,0 +1,8 @@
+cases:
+1 : resultat_calculs
+2 : ram1
+2 : ram2
+3 : temp_copy
+4 : nb de variables
+5 a 5+nb(variables) : variables
+nb(variables) > : rien

@@ -1,0 +1,6 @@
+#include modules/std.bfr
+
+3 a set
+0 b set
+b a doubler
+b printinteger
