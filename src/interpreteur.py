@@ -18,7 +18,7 @@ def interpreter(code, debug):
             cells[cellptr] = cells[cellptr] - 1 if cells[cellptr] > 0 else 255
         if command == "[" and cells[cellptr] == 0: codeptr = bracemap[codeptr]
         if command == "]" and cells[cellptr] != 0: codeptr = bracemap[codeptr]
-        if command == ".": sys.stdout.write(chr(cells[cellptr])+"\n")
+        if command == ".": sys.stdout.write(chr(cells[cellptr]))
         if command == ",": cells[cellptr] = ord(input())
         codeptr += 1
     if debug : print("[INTERPRETATION] :", cells, f"pointer sur {cellptr}")
