@@ -1,11 +1,12 @@
 
 # config
 MAX_MACROS = 100
-INDEX_OF_VARS = 6
+INDEX_OF_VARS = 7
 
 # macros
 goto_start = lambda : "+[-<+]-"
 goto_anchor = lambda id : f"{goto_start()}{'+'*id}[{'-'*id}>{'+'*id}]{'-'*id}>"
+goto_if = lambda : f"{goto_start()}>>>>>>"
 goto_variables = lambda : f"{goto_anchor(2)}"
 goto_strings = lambda : f"{goto_anchor(3)}"
 get_index = lambda dictionnaire, valeur : list(dictionnaire).index(valeur)
@@ -53,10 +54,10 @@ class Generateur:
                 dernier = last.pop()
                 if dernier == "int":
                     value = self.int_stack.pop()
-                elif dernier == "str":
-                    value = self.str_stack.pop()
                 elif dernier == "stk":
                     value = self.stack.pop()
+                elif dernier == "str":
+                    value = self.str_stack.pop()
                 if name not in self.variables_int and dernier == "int":
                     self.variables_int[name] = value
                     self.nb_variables_int += 1
@@ -70,7 +71,7 @@ class Generateur:
                 self.stack.append(instruction)
                 last.append("stk")
             instructions_index += 1
-            
+
         self.nb_strings = len(self.str_stack)
         if self.debug : print(f"[DEBUG] Nombre de variables : {self.nb_strings}")
         if self.debug : print(f"[DEBUG] Liste des variables : {self.str_stack}")
@@ -78,9 +79,9 @@ class Generateur:
         self.stack = []
         self.variables_int2 = [variable[0] for variable in self.variables_int.items()]
         self.variables_str2 = [variable[0] for variable in self.variables_str.items()]
-        
+
         self.add_instructions(f"{goto_variables()}{'>'*self.nb_variables_int}>---{goto_start()}\n")
-        
+
         if self.debug : print(f"[DEBUG] Nombre de variables : {self.nb_variables_int}")
         if self.debug : print(f"[DEBUG] Liste des variables : {self.variables_int2}")
         self.add_instructions(f"{goto_variables()} # go au début et va sur la case des variables\n")
@@ -103,19 +104,19 @@ class Generateur:
                     value = value.replace('\\N', " ")
                     value = value.replace('\\n', "\n")
                     self.add_instructions(f"# stocke {value}")
-                    self.add_instructions(f"{goto_strings()}{'>'*(len(self.longueur_strings[0:-1])+1+sum(self.longueur_strings[0:-1]))} # va au bon endroit\n") 
+                    self.add_instructions(f"{goto_strings()}{'>' * (len(self.longueur_strings[:-1]) + 1 + sum(self.longueur_strings[:-1]))} # va au bon endroit\n")
                     self.add_instructions(f"{'+'*len(value)}> #push la len\n")
                     newline = "\n"
                     for i in range(len(value)):
-                        self.add_instructions(f"{value[i]} : {'+'*ord(value[i])}{'>' if not i == len(value)-1 else ''}{newline if not i == len(value)-1 else ''}")
+                        self.add_instructions(f"{value[i]} : {'+' * ord(value[i])}{'>' if i != len(value)-1 else ''}{newline if i != len(value)-1 else ''}")
                     self.add_instructions(f"{goto_start()} #retourne au début \n\n")
             elif instruction == "printstr":
                 name = self.stack.pop()
                 nb = len(self.variables_str[name].replace("\\n", "\n").replace("\\N", " "))
                 index = get_index(self.variables_str, name)
-                self.add_instructions(f"{goto_strings()} {'>'*(sum(self.longueur_strings[0:index])+index+2)}")
+                self.add_instructions(f"{goto_strings()} {'>' * (sum(self.longueur_strings[:index]) + index + 2)}")
                 for i in range(nb):
-                    self.add_instructions(f".{'>' if not i == nb-1 else ''}")
+                    self.add_instructions(f".{'>' if i != nb-1 else ''}")
                 self.add_instructions(f" #affiche {self.variables_str[name]}\n")
             elif instruction == "printinteger":
                 name = self.stack.pop()
@@ -162,11 +163,10 @@ class Generateur:
                 self.stack.append(instruction)
             instructions_index += 1
 
-        
     def add_instructions(self, instructions):
         self.instructions += instructions
         
-    def check_for_infinite_loop(self):
+    def check_for_infinite_loop(self):  # sourcery skip: raise-specific-error
         if self.total_macros > MAX_MACROS:
             raise Exception("Too many nested macros")
     

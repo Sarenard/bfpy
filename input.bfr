@@ -1,2 +1,7 @@
 #include modules/std.bfr
 
+1 c set
+
+c if
+
+end
