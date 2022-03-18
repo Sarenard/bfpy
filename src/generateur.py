@@ -1,7 +1,7 @@
 
 # config
 MAX_MACROS = 100
-INDEX_OF_VARS = 5
+INDEX_OF_VARS = 6
 
 # macros
 goto_start = lambda : "+[-<+]-"
@@ -39,8 +39,7 @@ class Generateur:
         self.add_instructions("# Anchor principale \n")
         self.add_instructions("-\n")
         self.add_instructions("# Anchor des variables\n")
-        self.add_instructions(f">>>>>-- {goto_start()}\n\n")
-        self.add_instructions("# CODE :\n")
+        self.add_instructions(f"{'>'*INDEX_OF_VARS}-- {goto_start()}\n\n")
         instructions_index = 0
         last = []
         while instructions_index < len(self.code):
@@ -88,6 +87,7 @@ class Generateur:
         self.add_instructions(f"{set_var(self.nb_variables_int)} # nombre de variables ({self.nb_variables_int})\n")
         self.add_instructions(f"{goto_strings()} # go au début et va sur la case des strings\n")
         self.add_instructions(f"{set_var(self.nb_variables_str)} # nombre de strings ({self.nb_variables_str})\n")
+        self.add_instructions("\n# CODE :\n")
         instructions_index = 0
         while instructions_index < len(self.code):
             instruction = self.code[instructions_index]
@@ -102,7 +102,7 @@ class Generateur:
                     self.longueur_strings.append(len(value))
                     value = value.replace('\\N', " ")
                     value = value.replace('\\n', "\n")
-                    self.add_instructions(f"\n# stocke {value}\n")
+                    self.add_instructions(f"# stocke {value}")
                     self.add_instructions(f"{goto_strings()}{'>'*(len(self.longueur_strings[0:-1])+1+sum(self.longueur_strings[0:-1]))} # va au bon endroit\n") 
                     self.add_instructions(f"{'+'*len(value)}> #push la len\n")
                     newline = "\n"
@@ -123,11 +123,20 @@ class Generateur:
             elif instruction == "printint":
                 name = self.stack.pop()
                 self.add_instructions(f"{goto_variable(self.variables_int2, name)} . # print la variable {name}\n")
+            elif instruction == "input":
+                name = self.stack.pop()
+                self.add_instructions(f"{goto_variable(self.variables_int2, name)},{goto_start()} # input dans la variable {name}")
             elif instruction == "load":
                 load_to = self.stack.pop()
                 load_from = self.stack.pop()
                 self.add_instructions(f"{goto_variable(self.variables_int2, load_from)}-[{goto_start()}{'>'*(int(load_to[3])+1)}+{goto_start()}>>>>+{goto_variable(self.variables_int2, load_from)}-]{goto_start()}{'>'*(int(load_to[3])+1)}+{goto_start()}>>>>+ #dupe and load {load_from} in {load_to} \n")
                 self.add_instructions(f"{goto_start()} >>>>- [ {goto_variable(self.variables_int2, load_from)}+{goto_start()} >>>>-]{goto_variable(self.variables_int2, load_from)}+ # push back the original value \n")
+            elif instruction == "=":
+                from1 = self.stack.pop()
+                id_from1 = int(from1[3])+1
+                from2 = self.stack.pop()
+                id_from2 = int(from2[3])+1
+                self.add_instructions(f"{goto_start()} >> >>[-]>[-] <<<[>>>+<<<-]+ >[>>-<+<-] >[<+>-] >[<<<->>>[-]] << [-] < [-<+>] ")
             elif instruction == "+":
                 from1 = self.stack.pop()
                 id_from1 = int(from1[3])+1
@@ -137,7 +146,7 @@ class Generateur:
                 self.add_instructions(f"{goto_start()}{'>'*id_from2}- [{goto_start()}>+{goto_start()}{'>'*id_from2}-]{goto_start()}>+ # load la value 2 dans l'adder \n")
             elif instruction == "store_result":
                 load_to = self.stack.pop()
-                self.add_instructions(f"{goto_start()}>-[{goto_variable(self.variables_int2, load_to)}+{goto_start()}>-]{goto_variable(self.variables_int2, load_to)}+ # store le résultat dans la variable {load_to}\n")
+                self.add_instructions(f"{goto_start()}>  [-[{goto_variable(self.variables_int2, load_to)}+{goto_start()}>-]{goto_variable(self.variables_int2, load_to)}+{goto_start()}>[-]] # store le résultat dans la variable {load_to}\n")
             elif instruction == "swap":
                 nb = int(self.stack.pop())
                 liste = [self.stack.pop() for _ in range(nb)]
@@ -153,7 +162,6 @@ class Generateur:
                 self.stack.append(instruction)
             instructions_index += 1
 
-        print("[INFO] Instructions générées")
         
     def add_instructions(self, instructions):
         self.instructions += instructions

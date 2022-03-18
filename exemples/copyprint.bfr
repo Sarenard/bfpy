@@ -1,0 +1,6 @@
+#include modules/std.bfr
+
+
+0 var1 set
+var1 input
+var1 printint

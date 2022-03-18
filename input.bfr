@@ -1,5 +1,10 @@
 #include modules/std.bfr
 
-"Hello\NWorld\N!\n" hello set
+6 a set
+6 b set
+0 c set
 
-hello printstr
+
+a b ram1 load ram2 load ram1 ram2 = c store_result
+
+c printinteger

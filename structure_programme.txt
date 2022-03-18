@@ -2,7 +2,11 @@ cases:
 1 : resultat_calculs
 2 : ram1
 2 : ram2
-3 : temp_copy
-4 : nb de variables
-5 a 5+nb(variables) : variables
-nb(variables) > : rien
+3 : ram3
+4 : temp_copy
+5 : nb de variables
+6 a 6+nb(variables) : variables
+6+nb(variables)+1 : nb de strings
+strings : 
+    len
+    datas
