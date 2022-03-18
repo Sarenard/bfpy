@@ -116,7 +116,7 @@ class Generateur:
                 self.add_instructions(f"{goto_strings()} {'>'*(sum(self.longueur_strings[0:index])+index+2)}")
                 for i in range(nb):
                     self.add_instructions(f".{'>' if not i == nb-1 else ''}")
-                self.add_instructions(f" #affiche {self.variables_str[name]}")
+                self.add_instructions(f" #affiche {self.variables_str[name]}\n")
             elif instruction == "printinteger":
                 name = self.stack.pop()
                 self.add_instructions(f"{goto_variable(self.variables_int2, name)} {print_integer()} # print la variable {name} en int\n")
@@ -136,7 +136,7 @@ class Generateur:
                 id_from1 = int(from1[3])+1
                 from2 = self.stack.pop()
                 id_from2 = int(from2[3])+1
-                self.add_instructions(f"{goto_start()} >> >>[-]>[-] <<<[>>>+<<<-]+ >[>>-<+<-] >[<+>-] >[<<<->>>[-]] << [-] < [-<+>] ")
+                self.add_instructions(f"{goto_start()} >> >>[-]>[-] <<<[>>>+<<<-]+ >[>>-<+<-] >[<+>-] >[<<<->>>[-]] << [-] < [-<+>] #fait le =\n")
             elif instruction == "+":
                 from1 = self.stack.pop()
                 id_from1 = int(from1[3])+1

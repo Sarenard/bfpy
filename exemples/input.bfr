@@ -1,0 +1,10 @@
+#include modules/std.bfr
+
+83 a set
+78 b set
+0 c set
+
+"resultat\N:\N" result set
+
+c a b equal
+result printstr c printinteger newline printstr
