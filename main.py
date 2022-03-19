@@ -26,6 +26,9 @@ clean_bf = "".join([x for x in generateur.instructions if x in ['+', '-', '<', '
 if args.debug and not args.noti : print("[INFO] INTERPRETATION")
 if args.debug and not args.noti : print(f"[INFO] instructions : {clean_bf}")
 
+with open('sortie.bf', 'w', encoding="utf-8") as f:
+    f.write(generateur.instructions)
+
 if not args.noti : 
     if not args.raw : print("[INFO] Début de l'interprétation")
     t = time.time()
@@ -33,5 +36,3 @@ if not args.noti :
     if not args.raw : print(f"[INFO] Interprété en {time.time()-t}s")
 
 
-with open('sortie.bf', 'w', encoding="utf-8") as f:
-    f.write(generateur.instructions)

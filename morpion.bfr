@@ -1,0 +1,123 @@
+#include modules/std.bfr
+
+macro check_win
+    do_nothing
+end
+
+macro presets
+    "GG\NJoueur\N1\Ntu\Nas\Ngagné\N!\n" win1 set
+    "GG\NJoueur\N2\Ntu\Nas\Ngagné\N!\n" win2 set
+    "|" colonne set
+    49 case1_id set
+    50 case2_id set
+    51 case3_id set
+    52 case4_id set
+    53 case5_id set
+    54 case6_id set
+    55 case7_id set
+    56 case8_id set
+    57 case9_id set
+    0 case1_if set
+    0 case2_if set
+    0 case3_if set 
+    0 case4_if set
+    0 case5_if set
+    0 case6_if set
+    0 case7_if set
+    0 case8_if set
+    0 case9_if set
+    1 play_next set
+end
+
+macro input_entree
+    show_grid
+    entree input
+    case1_if case1_id entree equal
+    case2_if case2_id entree equal
+    case3_if case3_id entree equal
+    case4_if case4_id entree equal
+    case5_if case5_id entree equal
+    case6_if case6_id entree equal
+    case7_if case7_id entree equal
+    case8_if case8_id entree equal
+    case9_if case9_id entree equal
+end
+
+macro play_player1
+    input_entree
+    case1_if load_if if 49 case1 set 0 case1_if set end
+    case2_if load_if if 49 case2 set 0 case2_if set end
+    case3_if load_if if 49 case3 set 0 case3_if set end
+    case4_if load_if if 49 case4 set 0 case4_if set end
+    case5_if load_if if 49 case5 set 0 case5_if set end
+    case6_if load_if if 49 case6 set 0 case6_if set end
+    case7_if load_if if 49 case7 set 0 case7_if set end
+    case8_if load_if if 49 case8 set 0 case8_if set end
+    case9_if load_if if 49 case9 set 0 case9_if set end
+    check_win
+end
+
+macro play_player2
+    input_entree
+    case1_if load_if if 50 case1 set 0 case1_if set end
+    case2_if load_if if 50 case2 set 0 case2_if set end
+    case3_if load_if if 50 case3 set 0 case3_if set end
+    case4_if load_if if 50 case4 set 0 case4_if set end
+    case5_if load_if if 50 case5 set 0 case5_if set end
+    case6_if load_if if 50 case6 set 0 case6_if set end
+    case7_if load_if if 50 case7 set 0 case7_if set end
+    case8_if load_if if 50 case8 set 0 case8_if set end
+    case9_if load_if if 50 case9 set 0 case9_if set end
+    check_win
+end
+
+macro create_grid
+    48 case1 set
+    48 case2 set
+    48 case3 set
+    48 case4 set
+    48 case5 set
+    48 case6 set
+    48 case7 set
+    48 case8 set
+    48 case9 set
+    0 entree set
+end
+
+macro show_grid
+    case1 printint
+    colonne printstr
+    case2 printint
+    colonne printstr
+    case3 printint
+    newline printstr
+    case4 printint
+    colonne printstr
+    case5 printint
+    colonne printstr
+    case6 printint
+    newline printstr
+    case7 printint
+    colonne printstr
+    case8 printint
+    colonne printstr
+    case9 printint
+    newline printstr
+end
+
+macro main
+    presets
+    create_grid
+    play_next load_if if play_player1 end
+    play_next load_if if play_player2 end
+    play_next load_if if play_player1 end
+    play_next load_if if play_player2 end
+    play_next load_if if play_player1 end
+    play_next load_if if play_player2 end
+    play_next load_if if play_player1 end
+    play_next load_if if play_player2 end
+    play_next load_if if play_player1 end
+    show_grid
+end
+
+main

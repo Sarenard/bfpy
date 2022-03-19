@@ -15,12 +15,13 @@ replace_new_lines = lambda texte : texte.replace('\n', '\\n')
 goto_variable = lambda variables, variable : f"{goto_variables()} {'>'*(get_index(variables, variable)+1)}"
 set_var = lambda value : f"[-]{'+'*value} {goto_start()}"
 print_integer = lambda : f"{'+'*48}.{'-'*48}"
+normalize = lambda char : char if char not in ["+", "-", "[", "]", ",", ".", "<", ">"] else "illegal char to print"
 
 class Generateur:
     def __init__(self, code, debug):
         self.debug = debug
         if self.debug : print(f"[DEBUG] Code : {replace_new_lines(code)}")
-        self.code = code.replace("\n", " ").split(" ")
+        self.code = " ".join([x for x in code.split("\n") if not (x.lstrip().startswith("//"))]).replace("\n", " ").split(" ")
         if self.debug : print(f"[DEBUG] Code listé : {self.code}")
         self.instructions = ""
         self.nb_variables_int = 0
@@ -97,7 +98,8 @@ class Generateur:
                 self.stack.append(int(instruction))
             elif instruction == "load_if":
                 name = self.stack.pop()
-                self.add_instructions(f"{goto_variable(self.variables_int2, name)} [[-] {goto_if()}+ {goto_const_0()}] #load a var in the if")
+                # self.add_instructions(f"{goto_variable(self.variables_int2, name)} [[-] {goto_if()}+ {goto_const_0()}] #load a var in the if")
+                self.add_instructions(f"{goto_variable(self.variables_int2, name)}[- {goto_if()} + {goto_if()}<+ {goto_variable(self.variables_int2, name)}] {goto_start()}>>>>> [-{goto_variable(self.variables_int2, name)}+ {goto_start()}>>>>>] #load a var in the if")
             elif instruction == "if":
                 self.add_instructions(f"{goto_if()} [[-] # go au début et va sur la case du if et commence le if\n")
                 instructions_in_the_if = ""
@@ -139,7 +141,7 @@ class Generateur:
                 self.liste_included = if_generateur.liste_included
                 self.longueur_strings = if_generateur.longueur_strings
                 newline = "\n"
-                self.add_instructions(f"{if_generateur.instructions.replace(newline, '    ')} # fin du if\n")
+                self.add_instructions(f"{if_generateur.instructions.replace(newline, newline+'    ')} # fin du if\n")
                 self.add_instructions(f"{goto_if()}] # finit en retournant sur la case du if\n")
             elif instruction == "set":
                 name = self.stack.pop()
@@ -150,12 +152,12 @@ class Generateur:
                     self.longueur_strings.append(len(value))
                     value = value.replace('\\N', " ")
                     value = value.replace('\\n', "\n")
-                    self.add_instructions(f"# stocke {value}")
+                    self.add_instructions(f"# stocke {normalize(value)}")
                     self.add_instructions(f"{goto_strings()}{'>' * (len(self.longueur_strings[:-1]) + 1 + sum(self.longueur_strings[:-1]))} # va au bon endroit\n")
                     self.add_instructions(f"{'+'*len(value)}> #push la len\n")
                     newline = "\n"
                     for i in range(len(value)):
-                        self.add_instructions(f"{value[i]} : {'+' * ord(value[i])}{'>' if i != len(value)-1 else ''}{newline if i != len(value)-1 else ''}")
+                        self.add_instructions(f"{normalize(value[i])} : {'+' * ord(value[i])}{'>' if i != len(value)-1 else ''}{newline if i != len(value)-1 else ''}")
                     self.add_instructions(f"{goto_start()} #retourne au début \n\n")
             elif instruction == "printstr":
                 name = self.stack.pop()
@@ -164,7 +166,7 @@ class Generateur:
                 self.add_instructions(f"{goto_strings()} {'>' * (sum(self.longueur_strings[:index]) + index + 2)}")
                 for i in range(nb):
                     self.add_instructions(f".{'>' if i != nb-1 else ''}")
-                self.add_instructions(f" #affiche {self.variables_str[name]}\n")
+                self.add_instructions(f" #affiche {normalize(self.variables_str[name])}\n")
             elif instruction == "printinteger":
                 name = self.stack.pop()
                 self.add_instructions(f"{goto_variable(self.variables_int2, name)} {print_integer()} # print la variable {name} en int\n")
@@ -173,7 +175,7 @@ class Generateur:
                 self.add_instructions(f"{goto_variable(self.variables_int2, name)} . # print la variable {name}\n")
             elif instruction == "input":
                 name = self.stack.pop()
-                self.add_instructions(f"{goto_variable(self.variables_int2, name)},{goto_start()} # input dans la variable {name}")
+                self.add_instructions(f"{goto_variable(self.variables_int2, name)},{goto_start()} # input dans la variable {name}\n")
             elif instruction == "load":
                 load_to = self.stack.pop()
                 load_from = self.stack.pop()
