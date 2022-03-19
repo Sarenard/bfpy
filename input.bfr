@@ -1,7 +1,14 @@
 #include modules/std.bfr
 
-1 c set
+0 a set
+0 b set
+0 c set
 
-c if
+a input
+b input
 
+c a b equal
+c load_if if
+    "Les\Ndeux\Ncaracteres\Nsont\Negaux\N!\n" result set
+    result printstr
 end

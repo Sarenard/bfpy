@@ -9,7 +9,8 @@ def interpreter(code, debug):
         command = code[codeptr]
         if command == ">":
             cellptr += 1
-            if cellptr == len(cells): cells.append(0)
+            if cellptr == len(cells):
+                cells.append(0)
         if command == "<":
             cellptr = 0 if cellptr <= 0 else cellptr - 1
         if command == "+":

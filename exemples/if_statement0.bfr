@@ -1,0 +1,7 @@
+#include modules/std.bfr
+
+0 c set
+c load_if if
+    "IN\NTHE\NIF!" result set
+    result printstr
+end

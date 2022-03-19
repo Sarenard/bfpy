@@ -1,12 +1,13 @@
 
 # config
 MAX_MACROS = 100
-INDEX_OF_VARS = 7
+INDEX_OF_VARS = 8
 
 # macros
 goto_start = lambda : "+[-<+]-"
 goto_anchor = lambda id : f"{goto_start()}{'+'*id}[{'-'*id}>{'+'*id}]{'-'*id}>"
 goto_if = lambda : f"{goto_start()}>>>>>>"
+goto_const_0 = lambda : f"{goto_start()}>>>>>>>"
 goto_variables = lambda : f"{goto_anchor(2)}"
 goto_strings = lambda : f"{goto_anchor(3)}"
 get_index = lambda dictionnaire, valeur : list(dictionnaire).index(valeur)
@@ -94,6 +95,52 @@ class Generateur:
             instruction = self.code[instructions_index]
             if instruction.isdecimal():
                 self.stack.append(int(instruction))
+            elif instruction == "load_if":
+                name = self.stack.pop()
+                self.add_instructions(f"{goto_variable(self.variables_int2, name)} [[-] {goto_if()}+ {goto_const_0()}] #load a var in the if")
+            elif instruction == "if":
+                self.add_instructions(f"{goto_if()} [[-] # go au début et va sur la case du if et commence le if\n")
+                instructions_in_the_if = ""
+                end_if_number = 0
+                while True:
+                    instructions_index += 1
+                    if self.code[instructions_index] == "end":
+                        if end_if_number == 0:
+                            break
+                        else:
+                            end_if_number -= 1
+                    if self.code[instructions_index] == "if":
+                        end_if_number += 1
+                    instructions_in_the_if += f"{self.code[instructions_index]} "
+                if self.debug : print(f"[DEBUG] Instructions dans le if : {instructions_in_the_if}")
+                if_generateur = Generateur(instructions_in_the_if, self.debug)
+                if_generateur.instructions = ""
+                if_generateur.nb_variables_int = self.nb_variables_int
+                if_generateur.nb_variables_str = self.nb_variables_str
+                if_generateur.variables_int = self.variables_int
+                if_generateur.variables_str = self.variables_str
+                if_generateur.str_stack = self.str_stack
+                if_generateur.int_stack = self.int_stack
+                if_generateur.stack = self.stack
+                if_generateur.total_macros = self.total_macros
+                if_generateur.liste_included = self.liste_included
+                if_generateur.longueur_strings = self.longueur_strings
+                if_generateur.generate_instructions()
+                if_generateur.instructions = if_generateur.instructions.split("# CODE")[1]
+                if self.debug : print(f"[DEBUG] Instructions générées : {if_generateur.instructions}")
+                self.nb_variables_int = if_generateur.nb_variables_int
+                self.nb_variables_str = if_generateur.nb_variables_str
+                self.variables_int = if_generateur.variables_int
+                self.variables_str = if_generateur.variables_str
+                self.str_stack = if_generateur.str_stack
+                self.int_stack = if_generateur.int_stack
+                self.stack = if_generateur.stack
+                self.total_macros = if_generateur.total_macros
+                self.liste_included = if_generateur.liste_included
+                self.longueur_strings = if_generateur.longueur_strings
+                newline = "\n"
+                self.add_instructions(f"{if_generateur.instructions.replace(newline, '    ')} # fin du if\n")
+                self.add_instructions(f"{goto_if()}] # finit en retournant sur la case du if\n")
             elif instruction == "set":
                 name = self.stack.pop()
                 value = self.stack.pop()
