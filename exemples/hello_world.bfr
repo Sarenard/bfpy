@@ -1,5 +1,0 @@
-#include modules/std.bfr
-
-"Hello\NWorld\N!\n" hello set
-
-hello printstr

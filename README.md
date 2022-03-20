@@ -1,2 +1,3 @@
-# bfpy
-Un convertisseur language custom ==> brainfuck
+# BFPY
+V1 ==> SEE RELEASE
+V2 ==> WORK IN PROGRESS IN THIS REPO

@@ -1,4 +1,0 @@
-macro equal ram1 load ram2 load ram1 ram2 = store_result end
-macro add ram1 load ram2 load ram1 ram2 + store_result end
-macro doubler dup add end
-"\n" newline set 
