@@ -6,7 +6,9 @@ class I(IntEnum):
     PRINTINTEGER = auto()
     PRINTINT = auto() #print la vraie valeur
     PRINTSTRING = auto()
+    LOADIF = auto()
     
+    IF = auto()
     SET = auto()
     
 class Types(IntEnum):

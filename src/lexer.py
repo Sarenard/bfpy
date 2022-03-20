@@ -31,7 +31,7 @@ class Lexer:
                 if type_declare == "str":
                     longueur = int(instructions[instruction_index+3])
                     self.instructions.append((I.DECLARE_STR, name_declare, longueur, ))
-                    instruction_index += 3 
+                    instruction_index += 3
             elif instruction == "printinteger":
                 name = instructions[instruction_index-1]
                 self.instructions.append((I.PRINTINTEGER, name, ))
@@ -41,14 +41,26 @@ class Lexer:
             elif instruction == "printstring":
                 name = instructions[instruction_index-1]
                 self.instructions.append((I.PRINTSTRING, name, ))
-                
-                
-                
+            elif instruction == "if":
+                temp_instructions = ""
+                while instruction != "end":
+                    temp_instructions += f'{instruction} '
+                    instruction_index += 1
+                    instruction = instructions[instruction_index]
+                instruction_index += 1
+                temp_instructions = " ".join(temp_instructions.split(" ")[1:])
+                temp_instructions = temp_instructions.split(" ")
+                if_lexer = Lexer(self.debug)
+                if_lexer.parse(temp_instructions)
+                self.instructions.append((I.IF, if_lexer.instructions, ))
+            elif instruction == "loadif":
+                name = instructions[instruction_index-1]
+                self.instructions.append((I.LOADIF, name, ))
+
             instruction_index += 1
-        
+
         if self.debug : print("[DEBUG LEXER] instructions :", self.instructions)
         
-
     def add_instructions(self, instructions):
         self.instructions += instructions
         
