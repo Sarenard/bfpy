@@ -1,3 +1,5 @@
+# python .\main.py -f .\input.bfr -r -ni --compile --compile_and_run
+
 from src.interpreteur import interpreter
 from src.generateur import Generateur
 import argparse

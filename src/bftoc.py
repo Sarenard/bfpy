@@ -28,9 +28,9 @@ for char in raw_bf_string:
         bf_string += char
         if char == "<":
             negsize += 1
-
         elif char == ">":
             possize += 1
+
 size = max(possize, negsize)
 
 size = 30000

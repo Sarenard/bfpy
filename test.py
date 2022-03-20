@@ -1,5 +1,4 @@
-import subprocess
-from subprocess import Popen, PIPE, STDOUT
+from subprocess import Popen, PIPE
 
 def test(file):
     proc = Popen(file.name.split(' '), stdout=PIPE, stderr=PIPE)
@@ -18,7 +17,6 @@ class File:
         self.espected_output  = espected_output
         self.espected_error   = espected_error
         self.input            = input
-    
 
 files_to_test = [
     File("add.bfr", b"5", b''),
