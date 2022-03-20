@@ -1,4 +1,4 @@
-from src.Instructions import I1, Types
+from src.Instructions import I, Types
 
 # config
 MAX_MACROS = 1000
@@ -19,12 +19,11 @@ class Lexer:
         while instruction_index < len(instructions):
             instruction = instructions[instruction_index]
             if instruction.isnumeric():
-                self.instructions.append((I1.PUSHINT, int(instruction), ))
+                self.instructions.append((I.PUSHINT, int(instruction), ))
             elif instruction == "set":
-                self.instructions.append((I1.SET, ))
+                self.instructions.append((I.SET, ))
             else:
-                self.instructions.append((I1.PUSHSTR, instruction, ))
-
+                self.instructions.append((I.PUSHWORD, instruction, ))
 
             instruction_index += 1
         

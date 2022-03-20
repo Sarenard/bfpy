@@ -1,12 +1,9 @@
 from enum import Enum, IntEnum, auto
 
-class I1(IntEnum):
+class I(IntEnum):
     PUSHINT = auto()
-    PUSHSTR = auto()
+    PUSHWORD = auto()
     SET = auto()
-    
-class I2(IntEnum):
-    pass
     
 class Types(IntEnum):
     INT = auto()

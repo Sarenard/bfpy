@@ -1,5 +1,4 @@
 from src.generator import Generator
-from src.parser import Parser
 from src.lexer import Lexer
 import argparse
 import os
@@ -15,9 +14,6 @@ code = open(args.file).read().replace("\n", " ").split(" ")
 lexer = Lexer(args.debug)
 lexer.parse(code)
 instructions = lexer.instructions
-parser = Parser(args.debug)
-parser.parse(instructions)
-instructions = parser.instructions
 generator = Generator(args.debug)
 generator.generate(instructions)
 instructions = generator.instructions
