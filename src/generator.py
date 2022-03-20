@@ -1,4 +1,4 @@
-from src.Instructions import I, Types
+from src.Instructions import I2, Types
 import datetime
 
 class Generator:
@@ -15,7 +15,7 @@ class Generator:
         self.add_instructions("- \n")
         self.add_instructions("\n")
         
-        if self.debug : print("[DEBUG] instructions :", "".join([x for x in instructions if x in ["+","-","<",">",".",",","[","]"]]))
+        if self.debug : print(f"[DEBUG GENERATOR] instructions : {''.join([x for x in self.instructions if x in ['+','-','<','>','.',',','[',']']])}")
     
     def add_instructions(self, instructions):
         self.instructions += instructions
