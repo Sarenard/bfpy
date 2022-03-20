@@ -53,4 +53,4 @@ if args.compile_and_run:
     os.system("sortie.exe")
     print(f"[INFO] Exécuté en {time.time()-t}s")
     
-print(f"[INFO] Temps total : {time.time()-total}s")
+if not args.raw : print(f"[INFO] Temps total : {time.time()-total}s")
