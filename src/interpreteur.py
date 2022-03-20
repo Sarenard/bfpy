@@ -1,5 +1,7 @@
 import sys
 
+MAX_SIZE = 10**9
+
 def interpreter(code, debug):
     code = ''.join(filter(lambda x: x in ['.', ',', '[', ']', '<', '>', '+', '-'], list(code)))
     bracemap = buildbracemap(code)
@@ -8,9 +10,9 @@ def interpreter(code, debug):
         if debug : print("[INTERPRETATION] :", cells, f"pointer sur {cellptr}")
         command = code[codeptr]
         if command == "+":
-            cells[cellptr] = cells[cellptr] + 1 if cells[cellptr] < 255 else 0
+            cells[cellptr] = cells[cellptr] + 1 if cells[cellptr] < MAX_SIZE else 0
         elif command == "-":
-            cells[cellptr] = cells[cellptr] - 1 if cells[cellptr] > 0 else 255
+            cells[cellptr] = cells[cellptr] - 1 if cells[cellptr] > 0 else MAX_SIZE
         elif command == "<":
             cellptr = 0 if cellptr <= 0 else cellptr - 1
         elif command == ">":

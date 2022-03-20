@@ -66,7 +66,7 @@ class Generator:
                     index = sum(len(part) for part in part_list) + len(part_list) + 1
                     self.add_instructions(f"{goto_strings()} > {'>'*index} # va au debut de la chaine {name} pour son set\n")
                     for i in range(len(value)):
-                        if value[i] in "azertyuiopqsdfghjklmwxcvbn1234567890/*-+AZERTYUIOPQSDFGHJKLMWXCVBN":
+                        if value[i] in "azertyuiopqsdfghjklmwxcvbn1234567890/*AZERTYUIOPQSDFGHJKLMWXCVBN":
                             self.add_instructions(f"#character {value[i]} : > [-] {'+'*ord(value[i])}\n")
                         else:
                             self.add_instructions(f"#character (ILLEGAL TO PRINT) : > [-] {'+'*ord(value[i])}\n")
