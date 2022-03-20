@@ -1,5 +1,3 @@
-# TODO : NESTED IFS
-# TODO : LOOPS
 # TODO : LISTS
 
 from src.generator import Generator

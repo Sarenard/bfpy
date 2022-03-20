@@ -1,10 +1,11 @@
-#declare str hello 14
+#declare str t_f 6
 #declare int variable1
 
 macro main
-    5 variable1 set
-    "Hello\NWorld\N!\n" hello set 
-    variable1 loop
-        hello printstring
+    1 variable1 set
+    "False\n" t_f set 
+    variable1 if 
+        "True\N\n" t_f set 
     end
+    t_f printstring
 end

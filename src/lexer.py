@@ -44,7 +44,14 @@ class Lexer:
             elif instruction == "loop":
                 name = instructions[instruction_index-1]
                 temp_instructions = ""
-                while instruction != "end":
+                end_counters = 0
+                while True:
+                    if instruction in ["loop", "if"]:
+                        end_counters += 1
+                    if instruction == "end":
+                        end_counters -= 1
+                        if end_counters == 0 :
+                            break
                     temp_instructions += f'{instruction} '
                     instruction_index += 1
                     instruction = instructions[instruction_index]
@@ -57,7 +64,14 @@ class Lexer:
             elif instruction == "if":
                 name = instructions[instruction_index-1]
                 temp_instructions = ""
-                while instruction != "end":
+                end_counters = 0
+                while True:
+                    if instruction in ["loop", "if"]:
+                        end_counters += 1
+                    if instruction == "end":
+                        end_counters -= 1
+                        if end_counters == 0 :
+                            break
                     temp_instructions += f'{instruction} '
                     instruction_index += 1
                     instruction = instructions[instruction_index]
