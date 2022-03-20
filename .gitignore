@@ -1,5 +1,7 @@
 # big files not needed
 sortie.exe
+sortie.c
+sortie.bf
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
