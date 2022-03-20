@@ -1,8 +1,7 @@
 #include modules/std.bfr
 
 macro main
-    "Hello\NWorld\N!\n" test set
-    test printstr
+    13 test set
 end
 
 main
