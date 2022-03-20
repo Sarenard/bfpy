@@ -1,8 +1,17 @@
+#declare str string 14
+#declare str test2 5
+#declare str newline 1
 #declare int test
 
 macro main
-    5 test set
+    10 test set
+    "Hello\NWorld\N!\n" string set
+    "test\n" test2 set
+    test2 printstring
+    string printstring
     test printint
+    "\n" newline set 
+    newline printstring
 end
 
 main

@@ -8,7 +8,9 @@ NUMBER_OF_RAMS = 5
 get_id = lambda dict, value : list(dict.keys()).index(value)
 goto_start = lambda : "+[-<+]-"
 goto_anchor = lambda value : f"{goto_start()} {'+'*value}[{'-'*value}>{'+'*value}]{'-'*value}"
-goto_variables = lambda : goto_anchor(2)
+goto_variables = lambda : f"{goto_anchor(2)}"
+goto_strings = lambda : f"{goto_anchor(3)}"
+# reset_rams = lambda : f"{goto_start()} > {'>[-]'*NUMBER_OF_RAMS}" A TESTER
 
 class Generator:
     def __init__(self, debug):
@@ -16,6 +18,7 @@ class Generator:
         self.instructions = ""
         self.stack = []
         self.integers_dict = {}
+        self.strings_dict = {}
     
     def generate(self, instructions):
         self.add_instructions("# code par Loris_redstone\n")
@@ -26,17 +29,30 @@ class Generator:
         self.add_instructions("- \n")
         self.add_instructions("# variables\n")
         self.add_instructions(f"{'>'*(NUMBER_OF_RAMS+1)} -- {goto_start()}\n")
-        self.add_instructions("\n")
-        
+
         for instruction in instructions:
             if instruction[0] == I.DECLARE_INT:
                 self.integers_dict[instruction[1]] = 0
+            if instruction[0] == I.DECLARE_STR:
+                self.strings_dict[instruction[1]] = "N"*instruction[2]
         self.add_instructions("# nombre de variables\n")
         self.add_instructions(f"{goto_variables()} > {'+'*len(self.integers_dict)} #{len(self.integers_dict)}\n")
         for _ in range(len(self.integers_dict)):
-            self.add_instructions(">")
-        self.add_instructions(f" {goto_start()} # set toutes les variables a 0\n")
-        
+            self.add_instructions("> ")
+        self.add_instructions(f"{goto_start()} # set toutes les variables a 0\n")
+        self.add_instructions("# strings\n")
+        self.add_instructions(f"{goto_variables()} {'>'*(len(self.integers_dict)+2)} --- {goto_start()}\n")
+        self.add_instructions("# nombre de strings\n")
+        self.add_instructions(f"{goto_strings()} > {'+'*len(self.strings_dict)} {goto_start()} #{len(self.strings_dict)}\n")
+        self.add_instructions("# init des strings\n")
+        self.add_instructions(f"{goto_strings()} >")
+        for key in self.strings_dict:
+            value = self.strings_dict[key]
+            self.add_instructions(f"> {'+'*len(value)} {'>'*(len(value))} # init d'un string de longueur {len(value)}\n")
+        self.add_instructions(f"{goto_start()}\n")
+
+
+
         self.add_instructions("\nCODE : \n")
         for instruction in instructions:
             if instruction[0] == I.SET:
@@ -44,17 +60,32 @@ class Generator:
                 if name in self.integers_dict:
                     value = int(instruction[2])
                     index = get_id(self.integers_dict, name)
-                    self.add_instructions(f"{goto_variables()} {'>'*(index+1)} [-] {'+'*value} {goto_start()} # set {name} = {value}\n")
-            if instruction[0] == I.PRINTINTEGER:
+                    self.add_instructions(f"{goto_variables()} {'>'*(index+2)} [-] {'+'*value} {goto_start()} # set {name} = {value}\n")
+                if name in self.strings_dict:
+                    value = instruction[2].replace("\\N", " ").replace("\\n", "\n")[1:-1]
+                    index_in_dict = get_id(self.strings_dict, name)
+                    part_list = list(self.strings_dict.values())[:index_in_dict]
+                    index = sum(len(part) for part in part_list) + len(part_list) + 1
+                    self.add_instructions(f"{goto_strings()} > {'>'*index}\n")
+                    for i in range(len(value)):
+                        self.add_instructions(f"#character {value[i]} : > {'+'*ord(value[i])}\n")
+            elif instruction[0] == I.PRINTINTEGER:
                 name = instruction[1]
                 index = get_id(self.integers_dict, name)
                 self.add_instructions(f"{goto_variables()} {'>'*(index+1)} . {goto_start()} # print {name}\n")
-            if instruction[0] == I.PRINTINT:
+            elif instruction[0] == I.PRINTINT:
                 name = instruction[1]
                 index = get_id(self.integers_dict, name)
                 self.add_instructions(f"{goto_variables()} {'>'*(index+1)} {'+'*48} . {'-'*48} {goto_start()} # print la vraie valeur de {name}\n")
-                
+            elif instruction[0] == I.PRINTSTRING:
+                name = instruction[1]
+                index_in_dict = get_id(self.strings_dict, name)
+                part_list = list(self.strings_dict.values())[:index_in_dict]
+                index = sum(len(part) for part in part_list) + len(part_list) + 1
+                self.add_instructions(f"{goto_strings()} > {'>'*index} {'> .'*len(self.strings_dict[name])} {goto_start()} # print {name}\n")
+
         if self.debug : print("[DEBUG GENERATOR] integers_dict :", self.integers_dict)
+        if self.debug : print("[DEBUG GENERATOR] strings_dict :", self.strings_dict)
         if self.debug : print(f"[DEBUG GENERATOR] instructions : {''.join([x for x in self.instructions if x in ['+','-','<','>','.',',','[',']']])}")
     
     def add_instructions(self, instructions):

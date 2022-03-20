@@ -1,11 +1,12 @@
-from enum import Enum, IntEnum, auto
+from enum import IntEnum, auto
 
 class I(IntEnum):
-    PUSHINT = auto()
-    PUSHWORD = auto()
     DECLARE_INT = auto()
+    DECLARE_STR = auto()
     PRINTINTEGER = auto()
-    PRINTINT = auto()
+    PRINTINT = auto() #print la vraie valeur
+    PRINTSTRING = auto()
+    
     SET = auto()
     
 class Types(IntEnum):

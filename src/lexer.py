@@ -25,15 +25,25 @@ class Lexer:
             elif instruction == "#declare":
                 type_declare = instructions[instruction_index+1]
                 name_declare = instructions[instruction_index+2]
-                instruction_index += 2
                 if type_declare == "int":
                     self.instructions.append((I.DECLARE_INT, name_declare, ))
+                    instruction_index += 2 
+                if type_declare == "str":
+                    longueur = int(instructions[instruction_index+3])
+                    self.instructions.append((I.DECLARE_STR, name_declare, longueur, ))
+                    instruction_index += 3 
             elif instruction == "printinteger":
                 name = instructions[instruction_index-1]
                 self.instructions.append((I.PRINTINTEGER, name, ))
             elif instruction == "printint":
                 name = instructions[instruction_index-1]
                 self.instructions.append((I.PRINTINT, name, ))
+            elif instruction == "printstring":
+                name = instructions[instruction_index-1]
+                self.instructions.append((I.PRINTSTRING, name, ))
+                
+                
+                
             instruction_index += 1
         
         if self.debug : print("[DEBUG LEXER] instructions :", self.instructions)
