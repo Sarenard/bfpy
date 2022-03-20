@@ -1,7 +1,8 @@
-#include modules/std.bfr
+#declare int test
 
 macro main
-    13 test set
+    5 test set
+    test printint
 end
 
 main

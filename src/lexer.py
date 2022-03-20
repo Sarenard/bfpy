@@ -18,13 +18,22 @@ class Lexer:
         instruction_index = 0
         while instruction_index < len(instructions):
             instruction = instructions[instruction_index]
-            if instruction.isnumeric():
-                self.instructions.append((I.PUSHINT, int(instruction), ))
-            elif instruction == "set":
-                self.instructions.append((I.SET, ))
-            else:
-                self.instructions.append((I.PUSHWORD, instruction, ))
-
+            if instruction == "set":
+                name = instructions[instruction_index-1]
+                value = instructions[instruction_index-2]
+                self.instructions.append((I.SET, name, value, ))
+            elif instruction == "#declare":
+                type_declare = instructions[instruction_index+1]
+                name_declare = instructions[instruction_index+2]
+                instruction_index += 2
+                if type_declare == "int":
+                    self.instructions.append((I.DECLARE_INT, name_declare, ))
+            elif instruction == "printinteger":
+                name = instructions[instruction_index-1]
+                self.instructions.append((I.PRINTINTEGER, name, ))
+            elif instruction == "printint":
+                name = instructions[instruction_index-1]
+                self.instructions.append((I.PRINTINT, name, ))
             instruction_index += 1
         
         if self.debug : print("[DEBUG LEXER] instructions :", self.instructions)
