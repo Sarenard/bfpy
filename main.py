@@ -1,3 +1,8 @@
+# TODO : NESTED IFS
+# TODO : LOOPS
+# TODO : LISTS
+# TODO : AUTO LAUNCH MACRO MAIN
+
 from src.generator import Generator
 from src.lexer import Lexer
 import argparse
