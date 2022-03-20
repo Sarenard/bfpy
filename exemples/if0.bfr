@@ -4,11 +4,9 @@
 macro main
     0 variable1 set
     "Hello\NWorld\N1\n" string set 
-    variable1 loadif if 
+    variable1 if 
         "Hello\NWorld\N2\n" string set 
         0 variable1 set
     end
     string printstring
 end
-
-main

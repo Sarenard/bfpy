@@ -84,14 +84,13 @@ class Generator:
                 part_list = list(self.strings_dict.values())[:index_in_dict]
                 index = sum(len(part) for part in part_list) + len(part_list) + 1
                 self.add_instructions(f"{goto_strings()} > {'>'*index} {'> .'*len(self.strings_dict[name])} {goto_start()} # print {name}\n")
-            elif instruction[0] == I.LOADIF:
+            elif instruction[0] == I.IF:
                 name = instruction[1]
                 index = get_id(self.integers_dict, name)
                 self.add_instructions(f"{goto_variables()}{'>'*(index+2)}[-{goto_start()}>+>+{goto_variables()}{'>'*(index+2)}] #load the value of {name} in ALWAYS_0 and IFTEMP \n")
                 self.add_instructions(f"{goto_start()}>[-{goto_variables()}{'>'*(index+2)}+{goto_start()}>] #push back {name} in it's place and void ALWAYS_0\n")
                 self.add_instructions(f"{goto_start()}>> [[-]+<] #normalize IFTEMP")
-            elif instruction[0] == I.IF:
-                if_instructions = instruction[1]
+                if_instructions = instruction[2]
                 if_generateur = Generator(self.debug)
                 if_generateur.integers_dict = self.integers_dict
                 if_generateur.strings_dict = self.strings_dict

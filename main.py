@@ -1,7 +1,6 @@
 # TODO : NESTED IFS
 # TODO : LOOPS
 # TODO : LISTS
-# TODO : AUTO LAUNCH MACRO MAIN
 
 from src.generator import Generator
 from src.lexer import Lexer
@@ -18,7 +17,7 @@ parser.add_argument('-rp', '--runp', help='mode debug', required=False, action='
 parser.add_argument('-stfu', '--stfu', help='mode debug', required=False, action='store_true')
 args = parser.parse_args()
 
-code = open(args.file).read().replace("\n", " ").split(" ")
+code = (open(args.file).read().replace("\n", " ")+" main").split(" ")
 
 if not args.stfu : print("[INFO] : Génération du code")
 t = time.time()

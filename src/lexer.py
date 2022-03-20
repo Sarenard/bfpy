@@ -42,6 +42,7 @@ class Lexer:
                 name = instructions[instruction_index-1]
                 self.instructions.append((I.PRINTSTRING, name, ))
             elif instruction == "if":
+                name = instructions[instruction_index-1]
                 temp_instructions = ""
                 while instruction != "end":
                     temp_instructions += f'{instruction} '
@@ -52,10 +53,7 @@ class Lexer:
                 temp_instructions = temp_instructions.split(" ")
                 if_lexer = Lexer(self.debug)
                 if_lexer.parse(temp_instructions)
-                self.instructions.append((I.IF, if_lexer.instructions, ))
-            elif instruction == "loadif":
-                name = instructions[instruction_index-1]
-                self.instructions.append((I.LOADIF, name, ))
+                self.instructions.append((I.IF, name, if_lexer.instructions, ))
 
             instruction_index += 1
 
