@@ -7,6 +7,7 @@ class I(IntEnum):
     PRINTINT = auto() #print la vraie valeur
     PRINTSTRING = auto()
     
+    LOOP = auto()
     IF = auto()
     SET = auto()
     

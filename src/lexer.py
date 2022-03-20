@@ -41,6 +41,19 @@ class Lexer:
             elif instruction == "printstring":
                 name = instructions[instruction_index-1]
                 self.instructions.append((I.PRINTSTRING, name, ))
+            elif instruction == "loop":
+                name = instructions[instruction_index-1]
+                temp_instructions = ""
+                while instruction != "end":
+                    temp_instructions += f'{instruction} '
+                    instruction_index += 1
+                    instruction = instructions[instruction_index]
+                instruction_index += 1
+                temp_instructions = " ".join(temp_instructions.split(" ")[1:])
+                temp_instructions = temp_instructions.split(" ")
+                if_lexer = Lexer(self.debug)
+                if_lexer.parse(temp_instructions)
+                self.instructions.append((I.LOOP, name, if_lexer.instructions, ))
             elif instruction == "if":
                 name = instructions[instruction_index-1]
                 temp_instructions = ""
@@ -123,7 +136,7 @@ class Lexer:
             if not macro_en_cours and content[i] != "macro" : content_remplacement.append(content[i])
             if content[i] == "macro":
                 macro_en_cours = True
-            if content[i] in ["if", "while"]:
+            if content[i] in ["if", "loop"]:
                 end_compteur += 1
             if content[i] == "end":
                 if end_compteur == 0:

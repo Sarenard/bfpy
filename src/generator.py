@@ -97,6 +97,18 @@ class Generator:
                 if_generateur.generate(if_instructions)
                 newline = "\n"
                 self.add_instructions(f"\n{goto_start()}>> #start of the if \n[-{f'{newline}    '.join(if_generateur.instructions.split('CODE :')[1].split(newline))}{goto_start()}\n>]# end of the if\n")
+            elif instruction[0] == I.LOOP:
+                name = instruction[1]
+                index = get_id(self.integers_dict, name)
+                self.add_instructions(f"{goto_variables()}{'>'*(index+2)}[-{goto_start()}>+>+{goto_variables()}{'>'*(index+2)}] #load the value of {name} in ALWAYS_0 and IFTEMP \n")
+                self.add_instructions(f"{goto_start()}>[-{goto_variables()}{'>'*(index+2)}+{goto_start()}>] #push back {name} in it's place and void ALWAYS_0\n")
+                if_instructions = instruction[2]
+                loop_generateur = Generator(self.debug)
+                loop_generateur.integers_dict = self.integers_dict
+                loop_generateur.strings_dict = self.strings_dict
+                loop_generateur.generate(if_instructions)
+                newline = "\n"
+                self.add_instructions(f"\n{goto_start()}>> #start of the loop \n[-{f'{newline}    '.join(loop_generateur.instructions.split('CODE :')[1].split(newline))}{goto_start()}\n>>] #end of the loop \n")
 
         if self.debug : print("[DEBUG GENERATOR] integers_dict :", self.integers_dict)
         if self.debug : print("[DEBUG GENERATOR] strings_dict :", self.strings_dict)
