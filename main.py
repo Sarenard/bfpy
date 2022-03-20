@@ -1,4 +1,4 @@
-# python .\main.py -f .\input.bfr -r -ni --compile --compile_and_run
+# python .\main.py -f .\input.bfr -ni --interpreter_in_c -r -c -cr
 
 from src.interpreteur import interpreter
 from src.generateur import Generateur
@@ -14,6 +14,7 @@ parser.add_argument('-c', '--compile', help='compiled in c', required=False, act
 parser.add_argument('-cr', '--compile_and_run', help='compiled in c', required=False, action='store_true')
 parser.add_argument('-di', '--debugi', help='mode debug interpreteur', required=False, action='store_true')
 parser.add_argument('-ni', '--noti', help='mode non interprete', required=False, action='store_true')
+parser.add_argument('-ic', '--interpreter_in_c', help='mode non interprete', required=False, action='store_true')
 parser.add_argument('-r', '--raw', help='raw mode', required=False, action='store_false')
 args = parser.parse_args()
 
@@ -41,6 +42,12 @@ if not args.noti :
     t = time.time()
     interpreter(generateur.instructions, args.debugi)
     if not args.raw : print(f"[INFO] Interprété en {time.time()-t}s")
+
+if args.interpreter_in_c:
+    print("[INFO] Interpretation en C")
+    t = time.time()
+    os.system(f"src\interpreteur.exe sortie.bf")
+    print(f"[INFO] Interprété en {time.time()-t}s")
 
 if args.compile:
     print("[INFO] Compilation en C")
