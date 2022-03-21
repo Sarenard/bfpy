@@ -225,6 +225,7 @@ macro check_if_stopped
 end
 
 macro main
+    // TODO : PRINT HOW TO PLAY
     presets
     continue_playing if play_player_1 end
     continue_playing if play_player_2 end
@@ -236,4 +237,5 @@ macro main
     continue_playing if play_player_2 end
     continue_playing if play_player_1 end
     continue_playing if print_grid    end
+    // TODO : PRINT EGALITE
 end
