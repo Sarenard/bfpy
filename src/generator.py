@@ -116,8 +116,8 @@ class Generator:
                 index = get_id(self.integers_dict, what_to_load)
                 if load_to > NUMBER_OF_RAMS-2 :
                     raise Exception(f"Can't load into {load_to} because the maximum number of rams got reached")
-                self.add_instructions(f"{goto_variables()}{'>'*(index+2)}[-{goto_start()}>+{'>'*(load_to+2)}+{goto_variables()}{'>'*(index+2)}] #load the value of {name} in ALWAYS_0 and ram{load_to} \n")
-                self.add_instructions(f"{goto_start()}>[-{goto_variables()}{'>'*(index+2)}+{goto_start()}>] #push back {name} in it's place and void ALWAYS_0\n")
+                self.add_instructions(f"{goto_variables()}{'>'*(index+2)}[-{goto_start()}>+{'>'*(load_to+2)}+{goto_variables()}{'>'*(index+2)}] #load the value of {what_to_load} in ALWAYS_0 and ram{load_to} \n")
+                self.add_instructions(f"{goto_start()}>[-{goto_variables()}{'>'*(index+2)}+{goto_start()}>] #push back {what_to_load} in it's place and void ALWAYS_0\n")
             elif instruction[0] == I.EQUAL: # might be a bug cause of the ram1+2
                 ram1 = int(instruction[1][3:])
                 ram2 = int(instruction[2][3:])
