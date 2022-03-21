@@ -127,7 +127,11 @@ class Generator:
                 where = instruction[1]
                 what = int(instruction[2][3:])
                 index = get_id(self.integers_dict, where)
-                self.add_instructions(f"{goto_start()}{goto_variables()}{'>'*(index+2)}[-] {goto_start()}{'>'*(what+3)} [- {goto_variables()}{'>'*(index+2)}+{goto_start()}{'>'*(what+3)}] #store the value of ram{what} in {where} \n")
+                self.add_instructions(f"{goto_variables()}{'>'*(index+2)}[-] {goto_start()}{'>'*(what+3)} [- {goto_variables()}{'>'*(index+2)}+{goto_start()}{'>'*(what+3)}] #store the value of ram{what} in {where} \n")
+            elif instruction[0] == I.INPUT:
+                name = instruction[1]
+                index = get_id(self.integers_dict, name)
+                self.add_instructions(f"{goto_variables()}{'>'*(index+2)}, {goto_start()}")
 
         if self.debug : print("[DEBUG GENERATOR] integers_dict :", self.integers_dict)
         if self.debug : print("[DEBUG GENERATOR] strings_dict :", self.strings_dict)

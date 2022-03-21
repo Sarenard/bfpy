@@ -35,6 +35,9 @@ class Lexer:
             elif instruction == "printinteger":
                 name = instructions[instruction_index-1]
                 self.instructions.append((I.PRINTINTEGER, name, ))
+            elif instruction == "input":
+                name = instructions[instruction_index-1]
+                self.instructions.append((I.INPUT, name, ))
             elif instruction == "load":
                 load_to = instructions[instruction_index-1]
                 what_to_load = instructions[instruction_index-2]

@@ -53,13 +53,17 @@ int main(int argc, char **argv)
     if (ifd!=stdin) fclose(ifd);
  
     /* Execute the loaded BF program */
+    char c;
     for(n=pgm; n; n=n->next)
         switch(n->cmd)
         {
             case '+': m->val++; break;
             case '-': m->val--; break;
             case '.': putchar(m->val); break;
-            case ',': if((ch=getchar())!=EOF) m->val=ch; break;
+            case ',': 
+                c = getchar();
+                while (c == '\n' || c == EOF) {c = getchar();}
+                m->val=c; break;
             case '[': if (m->val == 0) n=n->jmp; break;
             case ']': if (m->val != 0) n=n->jmp; break;
             case '<':
