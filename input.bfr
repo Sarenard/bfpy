@@ -3,7 +3,7 @@
 
 macro presets
     "Artemis\NSalut\N!\n" coucou set
-    10 variable1 set
+    12 variable1 set
 end
 
 macro artemis
