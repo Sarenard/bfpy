@@ -7,7 +7,6 @@
 #declare int case7
 #declare int case8
 #declare int case9
-
 #declare int case1_id
 #declare int case2_id
 #declare int case3_id
@@ -17,7 +16,6 @@
 #declare int case7_id
 #declare int case8_id
 #declare int case9_id
-
 #declare int case1_if
 #declare int case2_if
 #declare int case3_if
@@ -36,7 +34,20 @@
 
 #declare int entree
 
+#declare int joueur1
+#declare int joueur2
+
+#declare int entree
+
+#declare int continue_playing
+
+#declare int chechwin_1
+#declare int chechwin_2
+#declare int chechwin_3
+
+
 macro presets
+    reset_checks // preset
     "GG\NJoueur\N1\Ntu\Nas\Ngagne\N!\n" win_1 set
     "GG\NJoueur\N2\Ntu\Nas\Ngagne\N!\n" win_2 set
     48 case1 set
@@ -48,6 +59,10 @@ macro presets
     48 case7 set
     48 case8 set
     48 case9 set
+
+    49 joueur1 set
+    50 joueur2 set
+
     49 case1_id set
     50 case2_id set
     51 case3_id set
@@ -68,6 +83,7 @@ macro presets
     0 case9_if set
     "|" colonne set
     "\n" newline set
+    1 continue_playing set
 end
 
 macro print_grid
@@ -116,6 +132,7 @@ macro play_player_1
     case7_if if 49 case7 set end
     case8_if if 49 case8 set end
     case9_if if 49 case9 set end
+    check_if_stopped
 end
 
 macro play_player_2
@@ -129,18 +146,94 @@ macro play_player_2
     case7_if if 50 case7 set end
     case8_if if 50 case8 set end
     case9_if if 50 case9 set end
+    check_if_stopped
+end
+
+macro reset_checks
+    0 chechwin_1 set
+    0 chechwin_2 set
+    0 chechwin_3 set
+end
+
+macro check_if_stopped
+    // player 1
+    case1 ram0 load joueur1 ram1 load ram0 ram1 = ram0 chechwin_1 store
+    case5 ram0 load joueur1 ram1 load ram0 ram1 = ram0 chechwin_2 store
+    case9 ram0 load joueur1 ram1 load ram0 ram1 = ram0 chechwin_3 store
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_1 printstring 0 continue_playing set end end end reset_checks
+    case3 ram0 load joueur1 ram1 load ram0 ram1 = ram0 chechwin_1 store
+    case5 ram0 load joueur1 ram1 load ram0 ram1 = ram0 chechwin_2 store
+    case7 ram0 load joueur1 ram1 load ram0 ram1 = ram0 chechwin_3 store
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_1 printstring 0 continue_playing set end end end reset_checks
+    case1 ram0 load joueur1 ram1 load ram0 ram1 = ram0 chechwin_1 store
+    case2 ram0 load joueur1 ram1 load ram0 ram1 = ram0 chechwin_2 store
+    case3 ram0 load joueur1 ram1 load ram0 ram1 = ram0 chechwin_3 store
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_1 printstring 0 continue_playing set end end end reset_checks
+    case4 ram0 load joueur1 ram1 load ram0 ram1 = ram0 chechwin_1 store
+    case5 ram0 load joueur1 ram1 load ram0 ram1 = ram0 chechwin_2 store
+    case6 ram0 load joueur1 ram1 load ram0 ram1 = ram0 chechwin_3 store
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_1 printstring 0 continue_playing set end end end reset_checks
+    case7 ram0 load joueur1 ram1 load ram0 ram1 = ram0 chechwin_1 store
+    case8 ram0 load joueur1 ram1 load ram0 ram1 = ram0 chechwin_2 store
+    case9 ram0 load joueur1 ram1 load ram0 ram1 = ram0 chechwin_3 store
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_1 printstring 0 continue_playing set end end end reset_checks
+    case1 ram0 load joueur1 ram1 load ram0 ram1 = ram0 chechwin_1 store
+    case4 ram0 load joueur1 ram1 load ram0 ram1 = ram0 chechwin_2 store
+    case7 ram0 load joueur1 ram1 load ram0 ram1 = ram0 chechwin_3 store
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_1 printstring 0 continue_playing set end end end reset_checks
+    case2 ram0 load joueur1 ram1 load ram0 ram1 = ram0 chechwin_1 store
+    case5 ram0 load joueur1 ram1 load ram0 ram1 = ram0 chechwin_2 store
+    case8 ram0 load joueur1 ram1 load ram0 ram1 = ram0 chechwin_3 store
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_1 printstring 0 continue_playing set end end end reset_checks
+    case3 ram0 load joueur1 ram1 load ram0 ram1 = ram0 chechwin_1 store
+    case6 ram0 load joueur1 ram1 load ram0 ram1 = ram0 chechwin_2 store
+    case9 ram0 load joueur1 ram1 load ram0 ram1 = ram0 chechwin_3 store
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_1 printstring 0 continue_playing set end end end reset_checks
+    //player 2
+    case1 ram0 load joueur2 ram1 load ram0 ram1 = ram0 chechwin_1 store
+    case5 ram0 load joueur2 ram1 load ram0 ram1 = ram0 chechwin_2 store
+    case9 ram0 load joueur2 ram1 load ram0 ram1 = ram0 chechwin_3 store
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_2 printstring 0 continue_playing set end end end reset_checks
+    case3 ram0 load joueur2 ram1 load ram0 ram1 = ram0 chechwin_1 store
+    case5 ram0 load joueur2 ram1 load ram0 ram1 = ram0 chechwin_2 store
+    case7 ram0 load joueur2 ram1 load ram0 ram1 = ram0 chechwin_3 store
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_2 printstring 0 continue_playing set end end end reset_checks
+    case1 ram0 load joueur2 ram1 load ram0 ram1 = ram0 chechwin_1 store
+    case2 ram0 load joueur2 ram1 load ram0 ram1 = ram0 chechwin_2 store
+    case3 ram0 load joueur2 ram1 load ram0 ram1 = ram0 chechwin_3 store
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_2 printstring 0 continue_playing set end end end reset_checks
+    case4 ram0 load joueur2 ram1 load ram0 ram1 = ram0 chechwin_1 store
+    case5 ram0 load joueur2 ram1 load ram0 ram1 = ram0 chechwin_2 store
+    case6 ram0 load joueur2 ram1 load ram0 ram1 = ram0 chechwin_3 store
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_2 printstring 0 continue_playing set end end end reset_checks
+    case7 ram0 load joueur2 ram1 load ram0 ram1 = ram0 chechwin_1 store
+    case8 ram0 load joueur2 ram1 load ram0 ram1 = ram0 chechwin_2 store
+    case9 ram0 load joueur2 ram1 load ram0 ram1 = ram0 chechwin_3 store
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_2 printstring 0 continue_playing set end end end reset_checks
+    case1 ram0 load joueur2 ram1 load ram0 ram1 = ram0 chechwin_1 store
+    case4 ram0 load joueur2 ram1 load ram0 ram1 = ram0 chechwin_2 store
+    case7 ram0 load joueur2 ram1 load ram0 ram1 = ram0 chechwin_3 store
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_2 printstring 0 continue_playing set end end end reset_checks
+    case2 ram0 load joueur2 ram1 load ram0 ram1 = ram0 chechwin_1 store
+    case5 ram0 load joueur2 ram1 load ram0 ram1 = ram0 chechwin_2 store
+    case8 ram0 load joueur2 ram1 load ram0 ram1 = ram0 chechwin_3 store
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_2 printstring 0 continue_playing set end end end reset_checks
+    case3 ram0 load joueur2 ram1 load ram0 ram1 = ram0 chechwin_1 store
+    case6 ram0 load joueur2 ram1 load ram0 ram1 = ram0 chechwin_2 store
+    case9 ram0 load joueur2 ram1 load ram0 ram1 = ram0 chechwin_3 store
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_2 printstring 0 continue_playing set end end end reset_checks
 end
 
 macro main
     presets
-    play_player_1
-    play_player_2
-    play_player_1
-    play_player_2
-    play_player_1
-    play_player_2
-    play_player_1
-    play_player_2
-    play_player_1
-    print_grid
+    continue_playing if play_player_1 end
+    continue_playing if play_player_2 end
+    continue_playing if play_player_1 end
+    continue_playing if play_player_2 end
+    continue_playing if play_player_1 end
+    continue_playing if play_player_2 end
+    continue_playing if play_player_1 end
+    continue_playing if play_player_2 end
+    continue_playing if play_player_1 end
+    continue_playing if print_grid    end
 end
