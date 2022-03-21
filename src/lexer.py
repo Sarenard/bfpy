@@ -35,12 +35,24 @@ class Lexer:
             elif instruction == "printinteger":
                 name = instructions[instruction_index-1]
                 self.instructions.append((I.PRINTINTEGER, name, ))
+            elif instruction == "load":
+                load_to = instructions[instruction_index-1]
+                what_to_load = instructions[instruction_index-2]
+                self.instructions.append((I.LOAD, load_to, what_to_load, ))
             elif instruction == "printint":
                 name = instructions[instruction_index-1]
                 self.instructions.append((I.PRINTINT, name, ))
             elif instruction == "printstring":
                 name = instructions[instruction_index-1]
                 self.instructions.append((I.PRINTSTRING, name, ))
+            elif instruction == "=":
+                ram1 = instructions[instruction_index-1]
+                ram2 = instructions[instruction_index-2]
+                self.instructions.append((I.EQUAL, ram1, ram2, ))
+            elif instruction == "store":
+                where = instructions[instruction_index-1]
+                what = instructions[instruction_index-2]
+                self.instructions.append((I.STORE, where, what, ))
             elif instruction == "loop":
                 name = instructions[instruction_index-1]
                 temp_instructions = ""

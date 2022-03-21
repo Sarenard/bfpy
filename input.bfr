@@ -1,6 +1,0 @@
-#declare str hello 15
-
-macro main
-    "Hello,\NWorld\N!\n" hello set
-    hello printstring
-end

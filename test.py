@@ -23,6 +23,9 @@ files_to_test = [
     File("if0.bfr", b"Hello World 1\r\n", b''),
     File("if1.bfr", b"Hello World 2\r\n", b''),
     File("loop.bfr", b"Hello World !\r\nHello World !\r\nHello World !\r\nHello World !\r\nHello World !\r\n", b''),
+    File("equal01.bfr", b"0", b''),
+    File("equal02.bfr", b"0", b''),
+    File("equal1.bfr", b"1", b''),
 ]
 for file in files_to_test:
     test(file)

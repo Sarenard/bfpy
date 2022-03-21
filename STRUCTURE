@@ -1,9 +1,9 @@
 0 : main anchor
 1 : ALWAYS 0
 2 : IFTEMP
-3 : RAM1
-4 : RAM2
-5 : RAM3
+3 : RAM0
+4 : RAM1
+5 : RAM2
 6 : anchor variables
 7 : nombre de variables
 8-(8+nombre de variables) : variables

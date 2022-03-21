@@ -20,7 +20,7 @@ class Generator:
         self.integers_dict = {}
         self.strings_dict = {}
     
-    def generate(self, instructions):
+    def generate(self, instructions):  # sourcery skip: raise-specific-error
         self.add_instructions("# code par Loris_redstone\n")
         self.add_instructions("# version 2\n")
         self.add_instructions(f"# date : {str(datetime.datetime.now()).replace('-', ' ').replace('.', ' ')}\n")
@@ -73,11 +73,12 @@ class Generator:
             elif instruction[0] == I.PRINTINTEGER:
                 name = instruction[1]
                 index = get_id(self.integers_dict, name)
-                self.add_instructions(f"{goto_variables()} {'>'*(index+1)} . {goto_start()} # print {name}\n")
+                self.add_instructions(f"{goto_variables()} {'>'*(index+2)} . {goto_start()} # print {name}\n")
             elif instruction[0] == I.PRINTINT:
                 name = instruction[1]
                 index = get_id(self.integers_dict, name)
-                self.add_instructions(f"{goto_variables()} {'>'*(index+1)} {'+'*48} . {'-'*48} {goto_start()} # print la vraie valeur de {name}\n")
+                NB = 48
+                self.add_instructions(f"{goto_variables()} {'>'*(index+2)} {'+'*NB} . {'-'*NB} {goto_start()} # print la vraie valeur de {name}\n")
             elif instruction[0] == I.PRINTSTRING:
                 name = instruction[1]
                 index_in_dict = get_id(self.strings_dict, name)
@@ -109,6 +110,24 @@ class Generator:
                 loop_generateur.generate(if_instructions)
                 newline = "\n"
                 self.add_instructions(f"\n{goto_start()}>> #start of the loop \n[-{f'{newline}    '.join(loop_generateur.instructions.split('CODE :')[1].split(newline))}{goto_start()}\n>>] #end of the loop \n")
+            elif instruction[0] == I.LOAD:
+                load_to = int(instruction[1][3:])
+                what_to_load = instruction[2]
+                index = get_id(self.integers_dict, what_to_load)
+                if load_to > NUMBER_OF_RAMS-2 :
+                    raise Exception(f"Can't load into {load_to} because the maximum number of rams got reached")
+                self.add_instructions(f"{goto_variables()}{'>'*(index+2)}[-{goto_start()}>+{'>'*(load_to+2)}+{goto_variables()}{'>'*(index+2)}] #load the value of {name} in ALWAYS_0 and ram{load_to} \n")
+                self.add_instructions(f"{goto_start()}>[-{goto_variables()}{'>'*(index+2)}+{goto_start()}>] #push back {name} in it's place and void ALWAYS_0\n")
+            elif instruction[0] == I.EQUAL: # might be a bug cause of the ram1+2
+                ram1 = int(instruction[1][3:])
+                ram2 = int(instruction[2][3:])
+                diff = max((ram2 - ram1), (ram1 - ram2))
+                self.add_instructions(f" {goto_start()} {'>'*(ram1+2)} {'>'*diff}[-{'<'*diff}-{'>'*diff}]+{'<'*diff}[{'>'*diff}-{'<'*diff}[-]]{'>'*diff}[-{'<'*diff}+{'>'*diff}] #computes the = of ram{ram1} and ram{ram2} \n")
+            elif instruction[0] == I.STORE:
+                where = instruction[1]
+                what = int(instruction[2][3:])
+                index = get_id(self.integers_dict, where)
+                self.add_instructions(f"{goto_start()}{'>'*(what+3)} [- {goto_variables()}{'>'*(index+2)}+{goto_start()}{'>'*(what+3)}] #store the value of ram{what} in {where} \n")
 
         if self.debug : print("[DEBUG GENERATOR] integers_dict :", self.integers_dict)
         if self.debug : print("[DEBUG GENERATOR] strings_dict :", self.strings_dict)
