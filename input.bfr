@@ -1,19 +1,10 @@
-#declare str coucou 16
-#declare int variable1
-
-macro presets
-    "Artemis\NSalut\N!\n" coucou set
-    12 variable1 set
-end
-
-macro artemis
-    coucou printstring
-end
+#declare int nb1
 
 macro main
-    presets
-    variable1 loop
-        artemis
-        0 variable1 set
-    end
+    15 nb1 set
+    nb1 ram0 load
+    nb1 ram1 load
+    ram0 ram1 =
+    ram0 nb1 store
+    nb1 printint
 end
