@@ -1,8 +1,5 @@
-/* This is the Neutron brainfuck interpreter.
- * It's rather small and dense, but still readable, more or less.
- *
- * Robert de Bath -- 2013.
- */
+// édité par Lorisredstone
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
