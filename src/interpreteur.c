@@ -1,5 +1,5 @@
-// cases = 256
 // édité par Lorisredstone
+// cases = 256
 
 #include <stdio.h>
 #include <stdlib.h>
