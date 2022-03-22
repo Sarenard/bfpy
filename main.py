@@ -31,13 +31,12 @@ instructions = lexer.instructions
 generator = Generator(args.debug)
 generator.generate(instructions)
 instructions = generator.instructions
+with open("sortie.bf", "w") as f:
+    f.write(instructions)
 if args.toc:
     os.system("python .\\src\\bftoc.py sortie.bf")
     os.system("gcc sortie.c -o sortie.exe")
 if not args.stfu : print(f"[INFO] : Génération du code terminée en {time.time() - t} secondes")
-
-with open("sortie.bf", "w") as f:
-    f.write(instructions)
 
 if not args.stfu : print("[INFO] : Execution du code")
 
