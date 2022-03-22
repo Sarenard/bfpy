@@ -1,6 +1,6 @@
 import sys
 
-MAX_SIZE = 10000
+MAX_SIZE = 255
 
 def interpreter(code, debug):
     code = ''.join(filter(lambda x: x in ['.', ',', '[', ']', '<', '>', '+', '-'], list(code)))
