@@ -1,0 +1,344 @@
+#declare int case1
+#declare int case2
+#declare int case3
+#declare int case4
+#declare int case5
+#declare int case6
+#declare int case7
+#declare int case8
+#declare int case9
+#declare int case1_id
+#declare int case2_id
+#declare int case3_id
+#declare int case4_id
+#declare int case5_id
+#declare int case6_id
+#declare int case7_id
+#declare int case8_id
+#declare int case9_id
+#declare int case1_if
+#declare int case2_if
+#declare int case3_if
+#declare int case4_if
+#declare int case5_if
+#declare int case6_if
+#declare int case7_if
+#declare int case8_if
+#declare int case9_if
+#declare str colonne 1
+#declare str newline 1
+#declare str win_1 26
+#declare str win_2 26
+#declare str win_3 27
+#declare str how_to_play 101
+#declare int entree
+#declare int joueur0
+#declare int joueur1
+#declare int joueur2
+#declare int entree
+#declare int continue_playing
+#declare int chechwin_1
+#declare int chechwin_2
+#declare int chechwin_3
+#declare str au_joueur_1 23
+#declare str au_joueur_2 23
+#declare int continue_ia
+#declare str ia_levels 50
+#declare int ialevel
+#declare int ia_level1_if
+#declare int ia_level2_if
+#declare int ia_level3_if
+#declare int ia_level1_id
+#declare int ia_level2_id
+#declare int ia_level3_id
+#declare str ia_level1_str 30
+#declare str ia_level2_str 30
+#declare str ia_level3_str 30
+#declare str lvl_non_implemented 30
+
+macro cw1_1 ram0 load joueur1 ram1 load ram0 ram1 = ram0 chechwin_1 store end
+macro cw2_1 ram0 load joueur1 ram1 load ram0 ram1 = ram0 chechwin_2 store end
+macro cw3_1 ram0 load joueur1 ram1 load ram0 ram1 = ram0 chechwin_3 store end
+macro cw1_2 ram0 load joueur2 ram1 load ram0 ram1 = ram0 chechwin_1 store end
+macro cw2_2 ram0 load joueur2 ram1 load ram0 ram1 = ram0 chechwin_2 store end
+macro cw3_2 ram0 load joueur2 ram1 load ram0 ram1 = ram0 chechwin_3 store end
+macro cw1_3 ram0 load joueur0 ram1 load ram0 ram1 = ram0 chechwin_1 store end
+macro cw2_3 ram0 load joueur0 ram1 load ram0 ram1 = ram0 chechwin_2 store end
+macro cw3_3 ram0 load joueur0 ram1 load ram0 ram1 = ram0 chechwin_3 store end
+
+macro presets
+    reset_checks // preset
+    "Pour\Njouer,\Nil\Nfaut\Nrentrer\Nun\Nnombre\Nentre\N1\Net\N9\Ncomme\Nsuit\N:\n1\N2\N3\n4\N5\N6\n7\N8\N9\n\n" how_to_play set
+    "GG\NJoueur\N1\Ntu\Nas\Ngagne\N!\n" win_1 set
+    "L'IA\Na\Ngagnee\N!\n" win_2 set
+    "Desole\Nc'est\Nune\Negalite\N!\n" win_3 set
+    "Au\Njoueur\N1\Nde\Njouer\N!\n" au_joueur_1 set
+    "A\Nl'IA\Nde\Njouer\N!\n" au_joueur_2 set
+    "Merci\Nde\Nchoisir\Nun\Nniveau\N(1\N2\Nou\N3):\n" ia_levels set
+    "IA\Nniveau\N1\N:\n\n" ia_level1_str set
+    "IA\Nniveau\N2\N:\n\n" ia_level2_str set
+    "IA\Nniveau\N3\N:\n\n" ia_level3_str set
+    "NIVEAU\NNON\NIMPLEMENTE,\NEXIT\n" lvl_non_implemented set
+    0 ialevel set
+    0 ia_level1 set
+    0 ia_level2 set
+    0 ia_level3 set
+    48 none set
+    48 case1 set
+    48 case2 set
+    48 case3 set
+    48 case4 set
+    48 case5 set
+    48 case6 set
+    48 case7 set
+    48 case8 set
+    48 case9 set
+    48 joueur0 set
+    49 joueur1 set
+    50 joueur2 set
+    49 case1_id set
+    50 case2_id set
+    51 case3_id set
+    52 case4_id set
+    53 case5_id set
+    54 case6_id set
+    55 case7_id set
+    56 case8_id set
+    57 case9_id set
+    0 case1_if set
+    0 case2_if set
+    0 case3_if set
+    0 case4_if set
+    0 case5_if set
+    0 case6_if set
+    0 case7_if set
+    0 case8_if set
+    0 case9_if set
+    "|" colonne set
+    "\n" newline set
+    1 continue_playing set
+    1 continue_ia set
+    49 ia_level1_id set
+    50 ia_level2_id set
+    51 ia_level3_id set
+end
+
+macro print_grid
+    case1 printinteger
+    colonne printstring
+    case2 printinteger
+    colonne printstring
+    case3 printinteger
+    newline printstring
+    case4 printinteger
+    colonne printstring
+    case5 printinteger
+    colonne printstring
+    case6 printinteger
+    newline printstring
+    case7 printinteger
+    colonne printstring
+    case8 printinteger
+    colonne printstring
+    case9 printinteger
+    newline printstring
+end
+
+macro player_input
+    print_grid
+    entree input
+    entree ram0 load case1_id ram1 load ram0 ram1 = ram0 case1_if store
+    entree ram0 load case2_id ram1 load ram0 ram1 = ram0 case2_if store
+    entree ram0 load case3_id ram1 load ram0 ram1 = ram0 case3_if store
+    entree ram0 load case4_id ram1 load ram0 ram1 = ram0 case4_if store
+    entree ram0 load case5_id ram1 load ram0 ram1 = ram0 case5_if store
+    entree ram0 load case6_id ram1 load ram0 ram1 = ram0 case6_if store
+    entree ram0 load case7_id ram1 load ram0 ram1 = ram0 case7_if store
+    entree ram0 load case8_id ram1 load ram0 ram1 = ram0 case8_if store
+    entree ram0 load case9_id ram1 load ram0 ram1 = ram0 case9_if store
+end
+
+macro play_player_1
+    au_joueur_1 printstring
+    player_input
+    case1_if if 49 case1 set end
+    case2_if if 49 case2 set end
+    case3_if if 49 case3 set end
+    case4_if if 49 case4 set end
+    case5_if if 49 case5 set end
+    case6_if if 49 case6 set end
+    case7_if if 49 case7 set end
+    case8_if if 49 case8 set end
+    case9_if if 49 case9 set end
+    check_if_stopped
+end
+
+macro ia_win
+    // si on peut gagner on gagne
+    continue_ia if case1 cw1_3 case2 cw2_2 case3 cw3_2 chechwin_1 if chechwin_2 if chechwin_3 if 50 case1 set 0 continue_ia set end end end end
+    continue_ia if case1 cw1_2 case2 cw2_3 case3 cw3_2 chechwin_1 if chechwin_2 if chechwin_3 if 50 case2 set 0 continue_ia set end end end end
+    continue_ia if case1 cw1_2 case2 cw2_2 case3 cw3_3 chechwin_1 if chechwin_2 if chechwin_3 if 50 case3 set 0 continue_ia set end end end end
+    continue_ia if case4 cw1_3 case5 cw2_2 case6 cw3_2 chechwin_1 if chechwin_2 if chechwin_3 if 50 case4 set 0 continue_ia set end end end end
+    continue_ia if case4 cw1_2 case5 cw2_3 case6 cw3_2 chechwin_1 if chechwin_2 if chechwin_3 if 50 case5 set 0 continue_ia set end end end end
+    continue_ia if case4 cw1_2 case5 cw2_2 case6 cw3_3 chechwin_1 if chechwin_2 if chechwin_3 if 50 case6 set 0 continue_ia set end end end end
+    continue_ia if case7 cw1_3 case8 cw2_2 case9 cw3_2 chechwin_1 if chechwin_2 if chechwin_3 if 50 case7 set 0 continue_ia set end end end end
+    continue_ia if case7 cw1_2 case8 cw2_3 case9 cw3_2 chechwin_1 if chechwin_2 if chechwin_3 if 50 case8 set 0 continue_ia set end end end end
+    continue_ia if case7 cw1_2 case8 cw2_2 case9 cw3_3 chechwin_1 if chechwin_2 if chechwin_3 if 50 case9 set 0 continue_ia set end end end end
+    continue_ia if case1 cw1_3 case4 cw2_2 case7 cw3_2 chechwin_1 if chechwin_2 if chechwin_3 if 50 case1 set 0 continue_ia set end end end end
+    continue_ia if case1 cw1_2 case4 cw2_3 case7 cw3_2 chechwin_1 if chechwin_2 if chechwin_3 if 50 case4 set 0 continue_ia set end end end end
+    continue_ia if case1 cw1_2 case4 cw2_2 case7 cw3_3 chechwin_1 if chechwin_2 if chechwin_3 if 50 case7 set 0 continue_ia set end end end end
+    continue_ia if case2 cw1_3 case5 cw2_2 case8 cw3_2 chechwin_1 if chechwin_2 if chechwin_3 if 50 case2 set 0 continue_ia set end end end end
+    continue_ia if case2 cw1_2 case5 cw2_3 case8 cw3_2 chechwin_1 if chechwin_2 if chechwin_3 if 50 case5 set 0 continue_ia set end end end end
+    continue_ia if case2 cw1_2 case5 cw2_2 case8 cw3_3 chechwin_1 if chechwin_2 if chechwin_3 if 50 case8 set 0 continue_ia set end end end end
+    continue_ia if case3 cw1_3 case6 cw2_2 case9 cw3_2 chechwin_1 if chechwin_2 if chechwin_3 if 50 case3 set 0 continue_ia set end end end end
+    continue_ia if case3 cw1_2 case6 cw2_3 case9 cw3_2 chechwin_1 if chechwin_2 if chechwin_3 if 50 case6 set 0 continue_ia set end end end end
+    continue_ia if case3 cw1_2 case6 cw2_2 case9 cw3_3 chechwin_1 if chechwin_2 if chechwin_3 if 50 case9 set 0 continue_ia set end end end end
+    continue_ia if case1 cw1_3 case5 cw2_2 case9 cw3_2 chechwin_1 if chechwin_2 if chechwin_3 if 50 case1 set 0 continue_ia set end end end end
+    continue_ia if case1 cw1_2 case5 cw2_3 case9 cw3_2 chechwin_1 if chechwin_2 if chechwin_3 if 50 case5 set 0 continue_ia set end end end end
+    continue_ia if case1 cw1_2 case5 cw2_2 case9 cw3_3 chechwin_1 if chechwin_2 if chechwin_3 if 50 case9 set 0 continue_ia set end end end end
+    continue_ia if case3 cw1_3 case5 cw2_2 case7 cw3_2 chechwin_1 if chechwin_2 if chechwin_3 if 50 case3 set 0 continue_ia set end end end end
+    continue_ia if case3 cw1_2 case5 cw2_3 case7 cw3_2 chechwin_1 if chechwin_2 if chechwin_3 if 50 case5 set 0 continue_ia set end end end end
+    continue_ia if case3 cw1_2 case5 cw2_2 case7 cw3_3 chechwin_1 if chechwin_2 if chechwin_3 if 50 case7 set 0 continue_ia set end end end end
+end
+
+macro ia_block
+    // sinon si l'autre peut gagner on le bloque
+    continue_ia if case1 cw1_3 case2 cw2_1 case3 cw3_1 chechwin_1 if chechwin_2 if chechwin_3 if 50 case1 set 0 continue_ia set end end end end
+    continue_ia if case1 cw1_1 case2 cw2_3 case3 cw3_1 chechwin_1 if chechwin_2 if chechwin_3 if 50 case2 set 0 continue_ia set end end end end
+    continue_ia if case1 cw1_1 case2 cw2_1 case3 cw3_3 chechwin_1 if chechwin_2 if chechwin_3 if 50 case3 set 0 continue_ia set end end end end
+    continue_ia if case4 cw1_3 case5 cw2_1 case6 cw3_1 chechwin_1 if chechwin_2 if chechwin_3 if 50 case4 set 0 continue_ia set end end end end
+    continue_ia if case4 cw1_1 case5 cw2_3 case6 cw3_1 chechwin_1 if chechwin_2 if chechwin_3 if 50 case5 set 0 continue_ia set end end end end
+    continue_ia if case4 cw1_1 case5 cw2_1 case6 cw3_3 chechwin_1 if chechwin_2 if chechwin_3 if 50 case6 set 0 continue_ia set end end end end
+    continue_ia if case7 cw1_3 case8 cw2_1 case9 cw3_1 chechwin_1 if chechwin_2 if chechwin_3 if 50 case7 set 0 continue_ia set end end end end
+    continue_ia if case7 cw1_1 case8 cw2_3 case9 cw3_1 chechwin_1 if chechwin_2 if chechwin_3 if 50 case8 set 0 continue_ia set end end end end
+    continue_ia if case7 cw1_1 case8 cw2_1 case9 cw3_3 chechwin_1 if chechwin_2 if chechwin_3 if 50 case9 set 0 continue_ia set end end end end
+    continue_ia if case1 cw1_3 case4 cw2_1 case7 cw3_1 chechwin_1 if chechwin_2 if chechwin_3 if 50 case1 set 0 continue_ia set end end end end
+    continue_ia if case1 cw1_1 case4 cw2_3 case7 cw3_1 chechwin_1 if chechwin_2 if chechwin_3 if 50 case4 set 0 continue_ia set end end end end
+    continue_ia if case1 cw1_1 case4 cw2_1 case7 cw3_3 chechwin_1 if chechwin_2 if chechwin_3 if 50 case7 set 0 continue_ia set end end end end
+    continue_ia if case2 cw1_3 case5 cw2_1 case8 cw3_1 chechwin_1 if chechwin_2 if chechwin_3 if 50 case2 set 0 continue_ia set end end end end
+    continue_ia if case2 cw1_1 case5 cw2_3 case8 cw3_1 chechwin_1 if chechwin_2 if chechwin_3 if 50 case5 set 0 continue_ia set end end end end
+    continue_ia if case2 cw1_1 case5 cw2_1 case8 cw3_3 chechwin_1 if chechwin_2 if chechwin_3 if 50 case8 set 0 continue_ia set end end end end
+    continue_ia if case3 cw1_3 case6 cw2_1 case9 cw3_1 chechwin_1 if chechwin_2 if chechwin_3 if 50 case3 set 0 continue_ia set end end end end
+    continue_ia if case3 cw1_1 case6 cw2_3 case9 cw3_1 chechwin_1 if chechwin_2 if chechwin_3 if 50 case6 set 0 continue_ia set end end end end
+    continue_ia if case3 cw1_1 case6 cw2_1 case9 cw3_3 chechwin_1 if chechwin_2 if chechwin_3 if 50 case9 set 0 continue_ia set end end end end
+    continue_ia if case1 cw1_3 case5 cw2_1 case9 cw3_1 chechwin_1 if chechwin_2 if chechwin_3 if 50 case1 set 0 continue_ia set end end end end
+    continue_ia if case1 cw1_1 case5 cw2_3 case9 cw3_1 chechwin_1 if chechwin_2 if chechwin_3 if 50 case5 set 0 continue_ia set end end end end
+    continue_ia if case1 cw1_1 case5 cw2_1 case9 cw3_3 chechwin_1 if chechwin_2 if chechwin_3 if 50 case9 set 0 continue_ia set end end end end
+    continue_ia if case3 cw1_3 case5 cw2_1 case7 cw3_1 chechwin_1 if chechwin_2 if chechwin_3 if 50 case3 set 0 continue_ia set end end end end
+    continue_ia if case3 cw1_1 case5 cw2_3 case7 cw3_1 chechwin_1 if chechwin_2 if chechwin_3 if 50 case5 set 0 continue_ia set end end end end
+    continue_ia if case3 cw1_1 case5 cw2_1 case7 cw3_3 chechwin_1 if chechwin_2 if chechwin_3 if 50 case7 set 0 continue_ia set end end end end
+end
+
+macro ia_random
+    // jeu dans un ordre prédéfini sinon
+    // TODO : RANDOM
+    continue_ia if case5 cw1_3 chechwin_1 if 50 case5 set 0 continue_ia set end end
+    continue_ia if case1 cw1_3 chechwin_1 if 50 case1 set 0 continue_ia set end end
+    continue_ia if case2 cw1_3 chechwin_1 if 50 case2 set 0 continue_ia set end end
+    continue_ia if case3 cw1_3 chechwin_1 if 50 case3 set 0 continue_ia set end end
+    continue_ia if case6 cw1_3 chechwin_1 if 50 case6 set 0 continue_ia set end end
+    continue_ia if case4 cw1_3 chechwin_1 if 50 case4 set 0 continue_ia set end end
+    continue_ia if case9 cw1_3 chechwin_1 if 50 case9 set 0 continue_ia set end end
+    continue_ia if case7 cw1_3 chechwin_1 if 50 case7 set 0 continue_ia set end end
+    continue_ia if case8 cw1_3 chechwin_1 if 50 case8 set 0 continue_ia set end end
+end
+
+macro play_ia
+
+    au_joueur_2 printstring
+
+    // ia lvl 1
+    ia_level1_if if 
+        ia_random
+    end
+    // ia lvl 2
+    ia_level2_if if
+        ia_win
+        ia_block
+        ia_random
+    end
+    // ia lvl 3
+    ia_level3_if if
+        ia_win
+        ia_block
+        // HERE : TODO : IA LEVEL 3 : IA_SMART_ASS
+        ia_random
+    end
+
+    1 continue_ia set reset_checks
+    
+    check_if_stopped
+end
+
+macro reset_checks
+    0 chechwin_1 set
+    0 chechwin_2 set
+    0 chechwin_3 set
+end
+ 
+macro check_if_stopped
+    // player 1
+    case1 cw1_1 case5 cw2_1 case9 cw3_1
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_1 printstring 0 continue_playing set end end end
+    case3 cw1_1 case5 cw2_1 case7 cw3_1
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_1 printstring 0 continue_playing set end end end
+    case1 cw1_1 case2 cw2_1 case3 cw3_1
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_1 printstring 0 continue_playing set end end end
+    case4 cw1_1 case5 cw2_1 case6 cw3_1
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_1 printstring 0 continue_playing set end end end
+    case7 cw1_1 case8 cw2_1 case9 cw3_1
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_1 printstring 0 continue_playing set end end end
+    case1 cw1_1 case4 cw2_1 case7 cw3_1
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_1 printstring 0 continue_playing set end end end
+    case2 cw1_1 case5 cw2_1 case8 cw3_1
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_1 printstring 0 continue_playing set end end end
+    case3 cw1_1 case6 cw2_1 case9 cw3_1
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_1 printstring 0 continue_playing set end end end
+    //player ia
+    case1 cw1_2 case5 cw2_2 case9 cw3_2
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_2 printstring 0 continue_playing set end end end
+    case3 cw1_2 case5 cw2_2 case7 cw3_2
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_2 printstring 0 continue_playing set end end end
+    case1 cw1_2 case2 cw2_2 case3 cw3_2
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_2 printstring 0 continue_playing set end end end
+    case4 cw1_2 case5 cw2_2 case6 cw3_2
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_2 printstring 0 continue_playing set end end end
+    case7 cw1_2 case8 cw2_2 case9 cw3_2
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_2 printstring 0 continue_playing set end end end
+    case1 cw1_2 case4 cw2_2 case7 cw3_2
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_2 printstring 0 continue_playing set end end end
+    case2 cw1_2 case5 cw2_2 case8 cw3_2
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_2 printstring 0 continue_playing set end end end
+    case3 cw1_2 case6 cw2_2 case9 cw3_2
+    chechwin_1 if chechwin_2 if chechwin_3 if print_grid win_2 printstring 0 continue_playing set end end end
+end
+
+macro set_ia
+    ia_levels printstring
+    ialevel input
+    ialevel ram0 load ia_level1_id ram1 load ram0 ram1 = ram0 ia_level1_if store
+    ialevel ram0 load ia_level2_id ram1 load ram0 ram1 = ram0 ia_level2_if store
+    ialevel ram0 load ia_level3_id ram1 load ram0 ram1 = ram0 ia_level3_if store
+    ia_level1_if if ia_level1_str printstring 1 continue_playing set end
+    ia_level2_if if ia_level2_str printstring 1 continue_playing set end
+    // TODO : IMPLEMENT LVL 3
+    ia_level3_if if ia_level3_str printstring lvl_non_implemented end
+end
+
+macro main
+    presets
+    0 continue_playing set
+    set_ia
+    continue_playing if how_to_play printstring end
+    continue_playing if play_player_1 end
+    continue_playing if play_ia end
+    continue_playing if play_player_1 end
+    continue_playing if play_ia end
+    continue_playing if play_player_1 end
+    continue_playing if play_ia end
+    continue_playing if play_player_1 end
+    continue_playing if play_ia end
+    continue_playing if play_player_1 end
+    continue_playing if print_grid    end
+    continue_playing if win_3 printstring end
+end

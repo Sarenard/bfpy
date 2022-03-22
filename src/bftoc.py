@@ -1,5 +1,15 @@
 # code original de https://github.com/paulkaefer/bftoc
 
+# ptr += 1;
+# *ptr = 108;
+# EST EQUIVALENT A
+# *(++ptr) = 108;
+
+# ptr += 2;
+# *ptr = 108;
+# EST EQUIVALENT A
+# *(ptr += 2) = 108;
+
 from sys import argv
 from datetime import datetime
 

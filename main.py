@@ -21,7 +21,7 @@ parser.add_argument('-toc', '--toc', help='mode debug', required=False, action='
 parser.add_argument('-runcc', '--runcc', help='mode debug', required=False, action='store_true')
 args = parser.parse_args()
 
-code = (open(args.file).read().replace("\n", " ")+" main").split(" ")
+code = ("\n".join([x for x in open(args.file).read().split("\n") if not x.strip().startswith("//")]).replace("\n", " ")+" main").split(" ")
 
 if not args.stfu : print("[INFO] : Génération du code")
 t = time.time()
