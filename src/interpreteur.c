@@ -1,3 +1,4 @@
+// cases = 256
 // édité par Lorisredstone
 
 #include <stdio.h>
@@ -29,7 +30,8 @@ int main(int argc, char **argv)
      *  command and so is ignored.  If there are any '[' commands left
      *  over at the end they are not valid BF commands and so are ignored.
      */
-    while((ch = getc(ifd)) != EOF && (ifd!=stdin || ch != '!' || j || !pgm)) {
+    // while((ch = getc(ifd)) != EOF && (ifd!=stdin || ch != '!' || j || !pgm)) {
+    while((ch = getc(ifd)) != EOF && (ifd!=stdin || j || !pgm)) { // removed the ! feature (not compiled yet)
         if (ch == '<' || ch == '>' || ch == '+' || ch == '-' ||
             ch == ',' || ch == '.' || ch == '[' || (ch == ']' && j)) {
             if ((n = calloc(1, sizeof*n)) == 0) {
