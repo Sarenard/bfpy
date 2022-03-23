@@ -34,6 +34,7 @@ instructions = generator.instructions
 with open("sortie.bf", "w") as f:
     f.write(instructions)
 if args.toc:
+    raise NotImplementedError("TODO AND FIX")
     os.system("python .\\src\\bftoc.py sortie.bf")
     os.system("gcc sortie.c -o sortie.exe")
 if not args.stfu : print(f"[INFO] : Génération du code terminée en {time.time() - t} secondes")
@@ -54,6 +55,7 @@ if args.run:
         from src.interpreteur import interpreter
         interpreter(instructions, args.debuginterpreteur)
 if args.runcc:
+    raise NotImplementedError("TODO AND FIX")
     os.system("sortie.exe")
         
 if not args.stfu : print(f"[INFO] : Execution du code terminée en {time.time() - t} secondes")
