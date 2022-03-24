@@ -1,6 +1,4 @@
 #declare str string 14
-
-
 macro main
     "Hello\NWorld\N!\n" string set
     string printstring

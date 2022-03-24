@@ -15,94 +15,15 @@ class Lexer:
     def parse(self, instructions):
         instructions = self.parse_includes(instructions)
         instructions = self.parse_macros(instructions)
-        instruction_index = 0
-        while instruction_index < len(instructions):
-            instruction = instructions[instruction_index]
-            if instruction == "set":
-                name = instructions[instruction_index-1]
-                value = instructions[instruction_index-2]
-                self.instructions.append((I.SET, name, value, ))
-            elif instruction == "#declare":
-                type_declare = instructions[instruction_index+1]
-                name_declare = instructions[instruction_index+2]
-                if type_declare == "int":
-                    self.instructions.append((I.DECLARE_INT, name_declare, ))
-                    instruction_index += 2 
-                if type_declare == "str":
-                    longueur = int(instructions[instruction_index+3])
-                    self.instructions.append((I.DECLARE_STR, name_declare, longueur, ))
-                    instruction_index += 3
-            elif instruction == "printinteger":
-                name = instructions[instruction_index-1]
-                self.instructions.append((I.PRINTINTEGER, name, ))
-            elif instruction == "input":
-                name = instructions[instruction_index-1]
-                self.instructions.append((I.INPUT, name, ))
-            elif instruction == "load":
-                load_to = instructions[instruction_index-1]
-                what_to_load = instructions[instruction_index-2]
-                self.instructions.append((I.LOAD, load_to, what_to_load, ))
-            elif instruction == "printint":
-                name = instructions[instruction_index-1]
-                self.instructions.append((I.PRINTINT, name, ))
-            elif instruction == "printstring":
-                name = instructions[instruction_index-1]
-                self.instructions.append((I.PRINTSTRING, name, ))
-            elif instruction == "=":
-                ram1 = instructions[instruction_index-1]
-                ram2 = instructions[instruction_index-2]
-                self.instructions.append((I.EQUAL, ram1, ram2, ))
-            elif instruction == "store":
-                where = instructions[instruction_index-1]
-                what = instructions[instruction_index-2]
-                self.instructions.append((I.STORE, where, what, ))
-            elif instruction == "loop":
-                name = instructions[instruction_index-1]
-                temp_instructions = ""
-                end_counters = 0
-                while True:
-                    if instruction in ["loop", "if"]:
-                        end_counters += 1
-                    if instruction == "end":
-                        end_counters -= 1
-                        if end_counters == 0 :
-                            break
-                    temp_instructions += f'{instruction} '
-                    instruction_index += 1
-                    instruction = instructions[instruction_index]
-                instruction_index += 1
-                temp_instructions = " ".join(temp_instructions.split(" ")[1:])
-                temp_instructions = temp_instructions.split(" ")
-                if_lexer = Lexer(self.debug)
-                if_lexer.parse(temp_instructions)
-                self.instructions.append((I.LOOP, name, if_lexer.instructions, ))
-            elif instruction == "if":
-                name = instructions[instruction_index-1]
-                temp_instructions = ""
-                end_counters = 0
-                while True:
-                    if instruction in ["loop", "if"]:
-                        end_counters += 1
-                    if instruction == "end":
-                        end_counters -= 1
-                        if end_counters == 0 :
-                            break
-                    temp_instructions += f'{instruction} '
-                    instruction_index += 1
-                    instruction = instructions[instruction_index]
-                instruction_index += 1
-                temp_instructions = " ".join(temp_instructions.split(" ")[1:])
-                temp_instructions = temp_instructions.split(" ")
-                if_lexer = Lexer(self.debug)
-                if_lexer.parse(temp_instructions)
-                self.instructions.append((I.IF, name, if_lexer.instructions, ))
-
-            instruction_index += 1
-
-        if self.debug : print("[DEBUG LEXER] instructions :", self.instructions)
+        self.instructions = "\n".join(instructions)
         
-    def add_instructions(self, instructions):
-        self.instructions += instructions
+
+        
+        # instruction_index = 0
+        # while instruction_index < len(instructions):
+        #     pass
+        #     instruction_index += 1
+        # if self.debug : print("[DEBUG LEXER] instructions :", self.instructions)
         
     def check_for_infinite_loop(self):  # sourcery skip: raise-specific-error
         if self.total_macros > MAX_MACROS:
