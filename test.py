@@ -19,7 +19,7 @@ class File:
         self.input            = input
 
 files_to_test = [
-    # File("Helloworld.bfr", b"Hello World !\r\n", b''), # SEE AS EXEMPLE
+    File("helloworld.bfr", b"Hello World !\r\n", b''),
 ]
 for file in files_to_test:
     test(file)

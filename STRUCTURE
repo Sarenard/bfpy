@@ -1,0 +1,18 @@
+0 : main anchor
+1 : ALWAYS 0
+2 : IFTEMP
+3 : RAM0
+4 : RAM1
+5 : RAM2
+6 : anchor pile
+7 : taille pile stockage
+8 : taille pile deplacement
+9 - x : pile stockage
+x+1 : anchor variables
+2 : nombre de variables
+x+3-(3+nombre de variables) : variables
+(x+3+nombre de variables) + 1 : anchor string
+(x+3+nombre de variables) + 2 : nombre de strings
+pour chaque str:
+    -len du string
+    -contenu, caractere par caractere

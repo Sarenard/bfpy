@@ -1,4 +1,4 @@
-from src.Instructions import I, Types
+from src.Instructions import I
 
 # config
 MAX_MACROS = 1000
@@ -15,15 +15,60 @@ class Lexer:
     def parse(self, instructions):
         instructions = self.parse_includes(instructions)
         instructions = self.parse_macros(instructions)
-        self.instructions = "\n".join(instructions)
         
-
-        
-        # instruction_index = 0
-        # while instruction_index < len(instructions):
-        #     pass
-        #     instruction_index += 1
-        # if self.debug : print("[DEBUG LEXER] instructions :", self.instructions)
+        instruction_index = 0
+        while instruction_index < len(instructions):
+            instruction = instructions[instruction_index]
+            if instruction == "#declare":
+                if instructions[instruction_index + 1] == "int":
+                    name = instructions[instruction_index + 2]
+                    self.instructions.append((I.DECLARE_INT, name))
+                    instruction_index += 2
+                if instructions[instruction_index + 1] == "str":
+                    name = instructions[instruction_index + 2]
+                    longueur = instructions[instruction_index + 3]
+                    self.instructions.append((I.DECLARE_STR, name, longueur))
+                    instruction_index += 3
+            elif instruction == "printstring":
+                name = instructions[instruction_index - 1]
+                self.instructions.append((I.PRINTSTRING, name))
+            elif instruction == "printint":
+                name = instructions[instruction_index - 1]
+                self.instructions.append((I.PRINTINT, name))
+            elif instruction == "printinteger":
+                name = instructions[instruction_index - 1]
+                self.instructions.append((I.PRINTINTEGER, name))
+            elif instruction == "rawprintstring":
+                content = instructions[instruction_index - 1]
+                self.instructions.append((I.RAWPRINTSTRING, content.replace("\\N", " ").replace("\\n", "\n").replace("\"", "")))
+            elif instruction == "set":
+                value = instructions[instruction_index - 2]
+                name = instructions[instruction_index - 1]
+                self.instructions.append((I.SET, name, value.replace("\\N", " ").replace("\\n", "\n").replace("\"", "")))
+            elif instruction == "if":
+                name = instructions[instruction_index-1]
+                temp_instructions = ""
+                end_counters = 0
+                while True:
+                    if instruction in ["if", ]:
+                        end_counters += 1
+                    if instruction == "end":
+                        end_counters -= 1
+                        if end_counters == 0 :
+                            break
+                    temp_instructions += f'{instruction} '
+                    instruction_index += 1
+                    instruction = instructions[instruction_index]
+                instruction_index += 1
+                temp_instructions = " ".join(temp_instructions.split(" ")[1:])
+                temp_instructions = temp_instructions.split(" ")
+                if_lexer = Lexer(self.debug)
+                if_lexer.parse(temp_instructions)
+                self.instructions.append((I.IF, name, if_lexer.instructions, ))
+                    
+            instruction_index += 1
+            
+        if self.debug : print("[DEBUG LEXER] instructions :", self.instructions)
         
     def check_for_infinite_loop(self):  # sourcery skip: raise-specific-error
         if self.total_macros > MAX_MACROS:
