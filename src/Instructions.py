@@ -10,8 +10,14 @@ class I(IntEnum):
     PRINTINTEGER = auto()
     
     SET = auto()
+    INPUT = auto()
     
     IF = auto()
+    
+    EQUAL = auto()
+    
+    LOAD = auto()
+    STORE = auto()
     
 class Types(IntEnum):
     INT = auto()

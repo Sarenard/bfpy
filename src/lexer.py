@@ -65,7 +65,19 @@ class Lexer:
                 if_lexer = Lexer(self.debug)
                 if_lexer.parse(temp_instructions)
                 self.instructions.append((I.IF, name, if_lexer.instructions, ))
-                    
+            elif instruction == "load":
+                load_to = instructions[instruction_index - 1]
+                what_to_load = instructions[instruction_index - 2]
+                self.instructions.append((I.LOAD, load_to, what_to_load))
+            elif instruction == "=":
+                ram2 = instructions[instruction_index - 1]
+                ram1 = instructions[instruction_index - 2]
+                self.instructions.append((I.EQUAL, ram1, ram2))
+            elif instruction == "store":
+                where = instructions[instruction_index - 1]
+                what = instructions[instruction_index - 2]
+                self.instructions.append((I.STORE, where, what))
+
             instruction_index += 1
             
         if self.debug : print("[DEBUG LEXER] instructions :", self.instructions)

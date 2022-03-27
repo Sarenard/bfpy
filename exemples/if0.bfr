@@ -2,7 +2,7 @@
 #declare int variable1
 
 macro main
-    2 variable1 set
+    0 variable1 set
     "Hello\NWorld\N1\n" string set 
     variable1 if 
         "Hello\NWorld\N2\n" string set 

@@ -61,9 +61,9 @@ class Generator:
                             index = data["position"]
                             nb = ord(value[i])
                             if value[i] in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789?/;:":
-                                self.add_instructions(f"{value[i]} : {goto_variables()} {'>'*(index+1)} {'+'*int(nb)} {goto_start()}\n")
+                                self.add_instructions(f"{value[i]} : {goto_variables()} {'>'*(index+1)} [-] {'+'*int(nb)} {goto_start()}\n")
                             else:
-                                self.add_instructions(f"ILLEGAL TO PRINT : {goto_variables()} {'>'*(index+1)} {'+'*int(nb)} {goto_start()}\n")
+                                self.add_instructions(f"ILLEGAL TO PRINT : {goto_variables()} {'>'*(index+1)} [-] {'+'*int(nb)} {goto_start()}\n")
                             data = self.variables[data["linked"]]
                 case I.PRINTINTEGER, name:
                     start_index = self.variables_indexes[name]
@@ -100,6 +100,25 @@ class Generator:
                     self.add_instructions(f"PRINT 1 TIME STRING \"{to_show}\"\n")
                     to_print = "".join([f"{'+'*ord(char)}.[-]" for char in value])
                     self.add_instructions(f"{goto_start()} > {to_print}")
+                case I.LOAD, load_to, what_to_load:
+                    load_to = int(load_to[3:])
+                    index = self.variables_indexes[what_to_load]
+                    if load_to > NOMBRE_DE_RAMS-2 :
+                        raise Exception(f"Can't load into {load_to} because the maximum number of rams got reached")
+                    self.add_instructions(f"{goto_variables()}{'>'*(index+1)}[-{goto_start()}>+{'>'*(load_to+2)}+{goto_variables()}{'>'*(index+1)}] #load the value of {what_to_load} in ALWAYS_0 and ram{load_to} \n")
+                    self.add_instructions(f"{goto_start()}>[-{goto_variables()}{'>'*(index+1)}+{goto_start()}>] #push back {what_to_load} in it's place and void ALWAYS_0\n")
+                case I.EQUAL, ram1, ram2:
+                    ram1 = int(ram1[3:])
+                    ram2 = int(ram2[3:])
+                    diff = max((ram2 - ram1), (ram1 - ram2))
+                    self.add_instructions(f"{goto_start()} {'>'*(ram1+3)} {'>'*diff}[-{'<'*diff}-{'>'*diff}]+{'<'*diff}[{'>'*diff}-{'<'*diff}[-]]{'>'*diff}[-{'<'*diff}+{'>'*diff}] #computes the = of ram{ram1} and ram{ram2} \n")
+                case I.STORE, where, what:
+                    what = int(what[3:])
+                    index = self.variables_indexes[where]
+                    self.add_instructions(f"{goto_variables()}{'>'*(index+1)}[-] {goto_start()}{'>'*(what+3)} [- {goto_variables()}{'>'*(index+1)}+{goto_start()}{'>'*(what+3)}] #store the value of ram{what} in {where} \n")
+                case I.INPUT, name:
+                    index = self.variables_indexes[name]
+                    self.add_instructions(f"{goto_variables()}{'>'*(index+1)}, {goto_start()}")
     
     def add_instructions(self, instructions):
         self.instructions += instructions
