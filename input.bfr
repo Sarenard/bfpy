@@ -1,7 +1,5 @@
-#declare int test
+#declare str string 14
 macro main
-    10 test set
-    test if
-        "Hello\NWorld\N!\n" rawprintstring
-    end
+    "Hello\NWorld\N!\n" string set
+    string printstring
 end

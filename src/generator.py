@@ -52,7 +52,7 @@ class Generator:
                     data = self.variables[start_index]
                     if data["type"] == Types.INT:
                         self.variables[start_index]["value"] = int(value)
-                        self.add_instructions(f"{goto_variables()} {'>'*(start_index+1)} [-] {'+'*int(value)} {goto_start()} # set la variable int ({name}) a {int(value)} \n")
+                        self.add_instructions(f"{goto_variables()} {'>'*(start_index+1)} [-] {'+'*int(value)} # set la variable int ({name}) a {int(value)} \n")
                     if data["type"] == Types.STR:
                         toshow = value.replace('\n', '\\n')
                         self.add_instructions(f"# set la variable str ({name}) a \"{toshow.replace(',', ' ').replace('+', ' ').replace('-', ' ').replace('.', ' ').replace('[', ' ').replace(']', ' ').replace('>', ' ').replace('<', ' ')}\"\n")
@@ -61,27 +61,27 @@ class Generator:
                             index = data["position"]
                             nb = ord(value[i])
                             if value[i] in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789?/;:":
-                                self.add_instructions(f"{value[i]} : {goto_variables()} {'>'*(index+1)} [-] {'+'*int(nb)} {goto_start()}\n")
+                                self.add_instructions(f"{value[i]} : {goto_variables()} {'>'*(index+1)} [-] {'+'*int(nb)}\n")
                             else:
-                                self.add_instructions(f"ILLEGAL TO PRINT : {goto_variables()} {'>'*(index+1)} [-] {'+'*int(nb)} {goto_start()}\n")
+                                self.add_instructions(f"ILLEGAL TO PRINT : {goto_variables()} {'>'*(index+1)} [-] {'+'*int(nb)}\n")
                             data = self.variables[data["linked"]]
                 case I.PRINTINTEGER, name:
                     start_index = self.variables_indexes[name]
                     data = self.variables[start_index]
-                    self.add_instructions(f"{goto_variables()} {'>'*(start_index+1)} . {goto_start()} # print la variable int ({name}) \n")
+                    self.add_instructions(f"{goto_variables()} {'>'*(start_index+1)} .# print la variable int ({name}) \n")
                 case I.PRINTINT, name:
                     start_index = self.variables_indexes[name]
                     data = self.variables[start_index]
-                    self.add_instructions(f"{goto_variables()} {'>'*(start_index+1)} {'+'*48} . {'-'*48} {goto_start()} # print la variable int ({name}) \n")
+                    self.add_instructions(f"{goto_variables()} {'>'*(start_index+1)} {'+'*48} . {'-'*48} # print la variable int ({name}) \n")
                 case I.PRINTSTRING, name:
                     char = 0
                     start_index = self.variables_indexes[name]
                     data = self.variables[start_index]
                     self.add_instructions("# print la variable str ({name}) \n")
-                    self.add_instructions(f"{goto_variables()} {'>'*(start_index+1)} . {goto_start()} # print la variable string ({name} | char={char} | value={data['value']}) \n")
+                    self.add_instructions(f"{goto_variables()} {'>'*(start_index+1)} .  # print la variable string ({name} | char={char} | value={data['value']}) \n")
                     while not data["linked"] == 0:
                         char += 1
-                        self.add_instructions(f"{goto_variables()} {'>'*(data['linked']+1)} . {goto_start()} # print la variable string ({name} | char={char} | value={data['value']}) \n")
+                        self.add_instructions(f"{goto_variables()} {'>'*(data['linked']+1)} . # print la variable string ({name} | char={char} | value={data['value']}) \n")
                         data = self.variables[data["linked"]]
                 case I.IF, name, if_instructions:
                     index = self.variables_indexes[name]
@@ -118,7 +118,7 @@ class Generator:
                     self.add_instructions(f"{goto_variables()}{'>'*(index+1)}[-] {goto_start()}{'>'*(what+3)} [- {goto_variables()}{'>'*(index+1)}+{goto_start()}{'>'*(what+3)}] #store the value of ram{what} in {where} \n")
                 case I.INPUT, name:
                     index = self.variables_indexes[name]
-                    self.add_instructions(f"{goto_variables()}{'>'*(index+1)}, {goto_start()}")
+                    self.add_instructions(f"{goto_variables()}{'>'*(index+1)}, #input in {name} \n")
     
     def add_instructions(self, instructions):
         self.instructions += instructions
