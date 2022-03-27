@@ -52,10 +52,10 @@ class Generator:
                     data = self.variables[start_index]
                     if data["type"] == Types.INT:
                         self.variables[start_index]["value"] = int(value)
-                        self.add_instructions(f"{goto_variables()} {'>'*(start_index+1)} {'+'*int(value)} {goto_start()} # set la variable int ({name}) a {int(value)} \n")
+                        self.add_instructions(f"{goto_variables()} {'>'*(start_index+1)} [-] {'+'*int(value)} {goto_start()} # set la variable int ({name}) a {int(value)} \n")
                     if data["type"] == Types.STR:
                         toshow = value.replace('\n', '\\n')
-                        self.add_instructions(f"# set la variable str ({name}) a \"{toshow}\"\n")
+                        self.add_instructions(f"# set la variable str ({name}) a \"{toshow.replace(',', ' ').replace('+', ' ').replace('-', ' ').replace('.', ' ').replace('[', ' ').replace(']', ' ').replace('>', ' ').replace('<', ' ')}\"\n")
                         for i in range(len(value)):
                             data["value"] = value[i]
                             index = data["position"]

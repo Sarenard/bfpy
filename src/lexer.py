@@ -77,6 +77,10 @@ class Lexer:
                 where = instructions[instruction_index - 1]
                 what = instructions[instruction_index - 2]
                 self.instructions.append((I.STORE, where, what))
+            elif instruction == "input":
+                what = instructions[instruction_index - 1]
+                self.instructions.append((I.INPUT, what))
+
 
             instruction_index += 1
             
