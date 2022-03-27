@@ -97,7 +97,7 @@ class Generator:
                 case I.RAWPRINTSTRING, value:
                     # TODO : OPTIMISE AND DONT REDO ord(char) EACH TIME
                     to_show = ''.join([(x if x in 'abcdefghijklmnopqrstuvwxyz123456798ABCDEFGHIJKLMNOPQRSTUVWXYZ/*!:;§/?' else '|') for x in value])
-                    self.add_instructions(f"PRINT \"{to_show}\"\n")
+                    self.add_instructions(f"PRINT 1 TIME STRING \"{to_show}\"\n")
                     to_print = "".join([f"{'+'*ord(char)}.[-]" for char in value])
                     self.add_instructions(f"{goto_start()} > {to_print}")
     
