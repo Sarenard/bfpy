@@ -102,7 +102,7 @@ class Generator:
                     to_show = ''.join([(x if x in 'abcdefghijklmnopqrstuvwxyz123456798ABCDEFGHIJKLMNOPQRSTUVWXYZ/*!:;§/?' else '|') for x in value])
                     self.add_instructions(f"PRINT 1 TIME STRING \"{to_show}\"\n")
                     to_print = "".join([f"{'+'*ord(char)}.[-]" for char in value])
-                    self.add_instructions(f"{goto_start()} > {to_print}")
+                    self.add_instructions(f"{goto_start()} > {to_print}\n")
                 case I.LOAD, load_to, what_to_load:
                     load_to = int(load_to[3:])
                     index = self.variables_indexes[what_to_load]
@@ -150,13 +150,13 @@ class Generator:
                     index = self.variables_indexes[variable]
                     self.add_instructions(f"{goto_variables()}{'>'*(index+1)}[-{goto_start()}>+>+{goto_variables()}{'>'*(index+1)}] #load the value of {variable} in ALWAYS_0 and IFTEMP \n")
                     self.add_instructions(f"{goto_start()}>[-{goto_variables()}{'>'*(index+1)}+{goto_start()}>] #push back {variable} in it's place and void ALWAYS_0\n")
-                    if_generateur = Generator(self.debug)
-                    if_generateur.variables = self.variables
-                    if_generateur.variables_indexes = self.variables_indexes
-                    if_generateur.generate(while_instructions)
+                    while_generateur = Generator(self.debug)
+                    while_generateur.variables = self.variables
+                    while_generateur.variables_indexes = self.variables_indexes
+                    while_generateur.generate(while_instructions)
                     newline = "\n"
-                    self.add_instructions(f"{goto_start()}>> #start of the if \n[[-]{f'{newline}    '.join(if_generateur.instructions.split('CODE :')[1].split(newline))}")
-                    self.add_instructions(f"{goto_variables()}{'>'*(index+1)}[-{goto_start()}>+>+{goto_variables()}{'>'*(index+1)}]{goto_start()}>[-{goto_variables()}{'>'*(index+1)}+{goto_start()}>]\n>]# end of the while (reload of the variable)\n")
+                    self.add_instructions(f"{goto_start()}>> #start of the while \n[[-]{f'{newline}    '.join(while_generateur.instructions.split('CODE :')[1].split(newline))}")
+                    self.add_instructions(f"{goto_variables()}{'>'*(index+1)}[-{goto_start()}>+>+{goto_variables()}{'>'*(index+1)}]{goto_start()}>[-{goto_variables()}{'>'*(index+1)}+{goto_start()}>] #reload la variable pour le while \n>]# end of the while\n")
     
     
     def add_instructions(self, instructions):
