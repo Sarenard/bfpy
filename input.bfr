@@ -2,7 +2,8 @@
 #declare int variable2
 #declare int variable3
 macro main
-    10 variable1 set
-    10 variable2 set
+    4 variable1 set
+    5 variable2 set
     variable3 variable2 variable1 add
+    variable3 printint
 end

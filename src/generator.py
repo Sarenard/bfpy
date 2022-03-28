@@ -9,7 +9,7 @@ goto_anchor = lambda value : f"{goto_start()} {'+'*value}[{'-'*value}>{'+'*value
 goto_pile = lambda : goto_anchor(2)
 goto_variables = lambda : goto_anchor(3)
 
-TAILLE_PILE = 2
+TAILLE_PILE = 0
 NOMBRE_DE_RAMS = 5
 INDEX_DECALE = NOMBRE_DE_RAMS + TAILLE_PILE
 
@@ -39,10 +39,14 @@ class Generator:
                     for i in range(int(longueur)):
                         self.variables[len(self.variables)] = {"type" : Types.STR, "name" : name, "value" : "", "linked" : (len(self.variables)+1 if i != int(longueur)-1 else 0), "position" : len(self.variables)}
                     self.variables_indexes[name] = start_index
-        self.add_instructions("#pile\n")
-        self.add_instructions(f"{goto_start()}{'>'*(NOMBRE_DE_RAMS+1)} -- {'>'*len(self.variables)} ({len(self.variables)})\n")
-        self.add_instructions("#nombre de variables\n")
-        self.add_instructions(f"{goto_start()}> {'>'*(NOMBRE_DE_RAMS+1+TAILLE_PILE+1+1)} --- {'>'*len(self.variables)} ({len(self.variables)})\n")
+        if TAILLE_PILE != 0:
+            self.add_instructions("#pile\n")
+            self.add_instructions(f"{goto_start()}{'>'*(NOMBRE_DE_RAMS+1)} -- {'>'*len(self.variables)} ({len(self.variables)})\n")
+            self.add_instructions("#nombre de variables\n")
+            self.add_instructions(f"{goto_start()}> {'>'*(NOMBRE_DE_RAMS+1+TAILLE_PILE+1+1)} --- {'>'*len(self.variables)} ({len(self.variables)})\n")
+        else:
+            self.add_instructions("#nombre de variables\n")
+            self.add_instructions(f"{goto_start()}> {'>'*(NOMBRE_DE_RAMS+1)} --- {'>'*len(self.variables)} ({len(self.variables)})\n")
         self.add_instructions("\n")
         self.add_instructions(f"CODE :\n")
         for instruction in instructions:
