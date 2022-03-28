@@ -1,0 +1,10 @@
+#declare int variable1
+
+macro main
+    100 variable1 set
+    variable1 while
+        variable1 printinteger
+        -1 variable1 cadd
+        // TODO : FIX
+    end
+end

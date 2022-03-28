@@ -1,4 +1,5 @@
 #declare int none
+#declare int tours
 #declare int case1
 #declare int case2
 #declare int case3
@@ -243,6 +244,7 @@ macro play_ia
     1 continue_ia set reset_checks
     
     check_if_stopped
+    
 end
 
 macro reset_checks
