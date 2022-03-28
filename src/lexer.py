@@ -80,7 +80,15 @@ class Lexer:
             elif instruction == "input":
                 what = instructions[instruction_index - 1]
                 self.instructions.append((I.INPUT, what))
-
+            elif instruction == "cadd":
+                variable = instructions[instruction_index - 1]
+                number = instructions[instruction_index - 2]
+                self.instructions.append((I.CADD, variable, number))
+            elif instruction == "add":
+                var1 = instructions[instruction_index - 1]
+                var2 = instructions[instruction_index - 2]
+                to_store = instructions[instruction_index - 3]
+                self.instructions.append((I.ADD, var1, var2, to_store))
 
             instruction_index += 1
             

@@ -1,5 +1,8 @@
-#declare str string 14
+#declare int variable1
+#declare int variable2
+#declare int variable3
 macro main
-    "Hello\NWorld\N!\n" string set
-    string printstring
+    10 variable1 set
+    10 variable2 set
+    variable3 variable2 variable1 add
 end

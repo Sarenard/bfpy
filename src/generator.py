@@ -118,6 +118,31 @@ class Generator:
                 case I.INPUT, name:
                     index = self.variables_indexes[name]
                     self.add_instructions(f"{goto_variables()}{'>'*(index+1)}, #input in {name} \n")
+                case I.CADD, name, number:
+                    number = int(number)
+                    index = self.variables_indexes[name]
+                    self.add_instructions(f"{goto_variables()}{'>'*(index+1)} {'+'*number if number > 0 else '-'*(-number)} {number} to {name} \n")
+                case I.ADD, var1, var2, to_store:
+                    load_to, what_to_load = "ram0", var1
+                    load_to = int(load_to[3:])
+                    index = self.variables_indexes[what_to_load]
+                    if load_to > NOMBRE_DE_RAMS-2 :
+                        raise Exception(f"Can't load into {load_to} because the maximum number of rams got reached")
+                    self.add_instructions(f"{goto_variables()}{'>'*(index+1)}[-{goto_start()}>+{'>'*(load_to+2)}+{goto_variables()}{'>'*(index+1)}] #load the value of {what_to_load} in ALWAYS_0 and ram{load_to} \n")
+                    self.add_instructions(f"{goto_start()}>[-{goto_variables()}{'>'*(index+1)}+{goto_start()}>] #push back {what_to_load} in it's place and void ALWAYS_0\n")
+                    load_to, what_to_load = "ram1", var2
+                    load_to = int(load_to[3:])
+                    index = self.variables_indexes[what_to_load]
+                    if load_to > NOMBRE_DE_RAMS-2 :
+                        raise Exception(f"Can't load into {load_to} because the maximum number of rams got reached")
+                    self.add_instructions(f"{goto_variables()}{'>'*(index+1)}[-{goto_start()}>+{'>'*(load_to+2)}+{goto_variables()}{'>'*(index+1)}] #load the value of {what_to_load} in ALWAYS_0 and ram{load_to} \n")
+                    self.add_instructions(f"{goto_start()}>[-{goto_variables()}{'>'*(index+1)}+{goto_start()}>] #push back {what_to_load} in it's place and void ALWAYS_0\n")
+                    self.add_instructions(f"{goto_start()}>>>> [-<+>]")
+                    what, where = "ram0", to_store
+                    what = int(what[3:])
+                    index = self.variables_indexes[where]
+                    self.add_instructions(f"{goto_variables()}{'>'*(index+1)}[-] {goto_start()}{'>'*(what+3)} [- {goto_variables()}{'>'*(index+1)}+{goto_start()}{'>'*(what+3)}] #store the value of ram{what} in {where} \n")
+    
     
     def add_instructions(self, instructions):
         self.instructions += instructions

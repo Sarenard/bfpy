@@ -15,6 +15,8 @@ class I(IntEnum):
     IF = auto()
     
     EQUAL = auto()
+    CADD = auto()
+    ADD = auto()
     
     LOAD = auto()
     STORE = auto()
