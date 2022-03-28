@@ -13,6 +13,7 @@ class I(IntEnum):
     INPUT = auto()
     
     IF = auto()
+    WHILE = auto()
     
     EQUAL = auto()
     CADD = auto()

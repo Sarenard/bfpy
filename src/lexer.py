@@ -50,7 +50,7 @@ class Lexer:
                 temp_instructions = ""
                 end_counters = 0
                 while True:
-                    if instruction in ["if", ]:
+                    if instruction in ["if", "while", ]:
                         end_counters += 1
                     if instruction == "end":
                         end_counters -= 1
@@ -89,6 +89,26 @@ class Lexer:
                 var2 = instructions[instruction_index - 2]
                 to_store = instructions[instruction_index - 3]
                 self.instructions.append((I.ADD, var1, var2, to_store))
+            elif instruction == "while":
+                name = instructions[instruction_index-1]
+                temp_instructions = ""
+                end_counters = 0
+                while True:
+                    if instruction in ["if", "while"]:
+                        end_counters += 1
+                    if instruction == "end":
+                        end_counters -= 1
+                        if end_counters == 0 :
+                            break
+                    temp_instructions += f'{instruction} '
+                    instruction_index += 1
+                    instruction = instructions[instruction_index]
+                instruction_index += 1
+                temp_instructions = " ".join(temp_instructions.split(" ")[1:])
+                temp_instructions = temp_instructions.split(" ")
+                if_lexer = Lexer(self.debug)
+                if_lexer.parse(temp_instructions)
+                self.instructions.append((I.WHILE, name, if_lexer.instructions, ))
 
             instruction_index += 1
             
@@ -155,7 +175,7 @@ class Lexer:
             if not macro_en_cours and content[i] != "macro" : content_remplacement.append(content[i])
             if content[i] == "macro":
                 macro_en_cours = True
-            if content[i] in ["if", "loop"]:
+            if content[i] in ["if", "while"]:
                 end_compteur += 1
             if content[i] == "end":
                 if end_compteur == 0:

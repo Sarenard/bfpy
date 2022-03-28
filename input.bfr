@@ -1,9 +1,8 @@
 #declare int variable1
-#declare int variable2
-#declare int variable3
+
 macro main
-    4 variable1 set
-    5 variable2 set
-    variable3 variable2 variable1 add
-    variable3 printint
+    1 variable1 set
+    variable1 while 
+        "coucou\n" rawprintstring 1 variable1 set 
+    end
 end
