@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 #declare int none
 #declare int tours
 #declare int case1
@@ -301,11 +302,14 @@ macro set_ia
     // TODO : IMPLEMENT LVL 3
     ia_level3_if if "IA\Nniveau\N3\N:\n\n" rawprintstring "NIVEAU\NNON\NIMPLEMENTE,\NEXIT\n" rawprintstring 0 continue_playing set end
 end
+=======
+#declare int var1
+>>>>>>> Stashed changes
 
 macro main
-    presets
-    set_ia
-    continue_playing if "Pour\Njouer,\Nil\Nfaut\Nrentrer\Nun\Nnombre\Nentre\N1\Net\N9\Ncomme\Nsuit\N:\n1\N2\N3\n4\N5\N6\n7\N8\N9\n\n" rawprintstring end
-    continue_playing while play_player_1 continue_playing if play_ia end end
-    continue_playing if print_grid "Desole\Nc'est\Nune\Negalite\N!\n" rawprintstring end
+    2 var1 set
+    var1 while
+        "test\n" rawprintstring
+        -1 var1 cadd
+    end
 end

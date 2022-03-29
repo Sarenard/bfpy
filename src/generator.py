@@ -125,7 +125,7 @@ class Generator:
                 case I.CADD, name, number:
                     number = int(number)
                     index = self.variables_indexes[name]
-                    self.add_instructions(f"{goto_variables()}{'>'*(index+1)} {'+'*number if number > 0 else '-'*(-number)} {number} to {name} \n")
+                    self.add_instructions(f"{goto_variables()}{'>'*(index+1)} {'+'*number if number > 0 else '-'*(-number)} {f'add {number}' if number > 0 else f'remove {-number}'} to {name} \n")
                 case I.ADD, var1, var2, to_store:
                     load_to, what_to_load = "ram0", var1
                     load_to = int(load_to[3:])
