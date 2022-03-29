@@ -155,7 +155,7 @@ class Generator:
                     while_generateur.variables_indexes = self.variables_indexes
                     while_generateur.generate(while_instructions)
                     newline = "\n"
-                    self.add_instructions(f"{goto_start()}>> #start of the while \n[[-]{f'{newline}    '.join(while_generateur.instructions.split('CODE :')[1].split(newline))}")
+                    self.add_instructions(f"{goto_start()}>> [[-] #start of the while {f'{newline}    '.join(while_generateur.instructions.split('CODE :')[1].split(newline))}")
                     self.add_instructions(f"{goto_variables()}{'>'*(index+1)}[-{goto_start()}>+>+{goto_variables()}{'>'*(index+1)}]{goto_start()}>[-{goto_variables()}{'>'*(index+1)}+{goto_start()}>] #reload la variable pour le while \n>]# end of the while\n")
     
     
