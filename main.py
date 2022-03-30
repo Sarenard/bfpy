@@ -4,6 +4,7 @@
 # TODO : LISTS
 
 from src.generator import Generator
+from src.parseur import Parseur
 from src.lexer import Lexer
 import argparse
 import time
@@ -19,10 +20,12 @@ parser.add_argument('-r', '--run', help='mode debug', required=False, action='st
 parser.add_argument('-stfu', '--stfu', help='mode debug', required=False, action='store_true')
 args = parser.parse_args()
 
-code = ("\n".join([x for x in open(args.file).read().split("\n") if not x.strip().startswith("//")]).replace("\n", " ")+" main").split(" ")
+code = open(args.file, "r").read()
 
 if not args.stfu : print("[INFO] : Génération du code")
 t = time.time()
+parseur = Parseur(args.debug)
+code = parseur.parse(code)
 lexer = Lexer(args.debug)
 lexer.parse(code)
 instructions = lexer.instructions
