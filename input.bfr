@@ -3,7 +3,7 @@
 macro main
     2 var1 set
     var1 while
-        "test\n" rawprintstring
+        "test e  e    e \n" rawprintstring
         -1 var1 cadd
     end
 end
