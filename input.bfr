@@ -1,9 +1,11 @@
 #declare int var1
+#declare str string 10
 
 macro main
     2 var1 set
+    "test 1234\n" string set
     var1 while
-        "test e  e    e \n" rawprintstring
+        string printstring
         -1 var1 cadd
     end
 end
