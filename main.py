@@ -16,7 +16,6 @@ parser.add_argument('-d', '--debug', help='mode debug', required=False, action='
 parser.add_argument('-di', '--debuginterpreteur', help='mode debug', required=False, action='store_true')
 parser.add_argument('-rc', '--runc', help='mode debug', required=False, action='store_true')
 parser.add_argument('-rp', '--runp', help='mode debug', required=False, action='store_true')
-parser.add_argument('-r', '--run', help='mode debug', required=False, action='store_true')
 parser.add_argument('-stfu', '--stfu', help='mode debug', required=False, action='store_true')
 args = parser.parse_args()
 
@@ -44,12 +43,5 @@ if args.runc:
 if args.runp:
     from src.interpreteur import interpreter
     interpreter(instructions, args.debuginterpreteur)
-if args.run:
-    longueur = len(instructions)
-    if longueur > 10000:
-        os.system(".\src\interpreteur.exe .\sortie.bf")
-    else:
-        from src.interpreteur import interpreter
-        interpreter(instructions, args.debuginterpreteur)
         
 if not args.stfu : print(f"[INFO] : Execution du code terminée en {time.time() - t} secondes")

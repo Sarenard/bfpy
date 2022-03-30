@@ -294,6 +294,7 @@ macro set_ia
     ialevel ram0 load ia_level1_id ram1 load ram0 ram1 = ram0 ia_level1_if store
     ialevel ram0 load ia_level2_id ram1 load ram0 ram1 = ram0 ia_level2_if store
     ialevel ram0 load ia_level3_id ram1 load ram0 ram1 = ram0 ia_level3_if store
+    0 continue_playing set
     ia_level1_if if "IA\Nniveau\N1\N:\n\n" rawprintstring 1 continue_playing set end
     ia_level2_if if "IA\Nniveau\N2\N:\n\n" rawprintstring 1 continue_playing set end
     // TODO : IMPLEMENT LVL 3
