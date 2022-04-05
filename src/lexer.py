@@ -20,9 +20,14 @@ class Lexer:
         while instruction_index < len(instructions):
             instruction = instructions[instruction_index]
             if instruction == "#declare":
-                if instructions[instruction_index + 1] == "int":
+                if instructions[instruction_index + 1] in ["int", "8int"]:
                     name = instructions[instruction_index + 2]
-                    self.instructions.append((I.DECLARE_INT, name))
+                    self.instructions.append((I.DECLARE_INT, name, 8))
+                    instruction_index += 2
+                elif instruction[instruction_index + 1].split("int")[0] != "8":
+                    name = instructions[instruction_index + 2]
+                    size = instructions[instruction_index + 1].split("int")[0]
+                    self.instructions.append((I.DECLARE_INT, name, int(size)))
                     instruction_index += 2
                 if instructions[instruction_index + 1] == "str":
                     name = instructions[instruction_index + 2]

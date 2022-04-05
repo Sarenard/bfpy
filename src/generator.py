@@ -29,16 +29,22 @@ class Generator:
         self.add_instructions("- \n")
         for instruction in instructions:
             match instruction:
-                case I.DECLARE_INT, name:
+                case I.DECLARE_INT, name, size:
                     value = 0
-                    id = len(self.variables)
-                    self.variables[id] = {"type" : Types.INT, "name" : name, "value" : value, "linked" : 0, "position" : id}
-                    self.variables_indexes[name] = id
+                    if size == 8:
+                        self.variables_indexes[name] = len(self.variables)
+                        self.variables[len(self.variables)] = {"type" : Types.INT, "name" : name, "value" : value, "size" : size, "linked" : 0, "position" : len(self.variables)}
+                    else:
+                        self.variables_indexes[name] = len(self.variables)
+                        for i in range(int(size/8)):
+                            self.variables[len(self.variables)] = {"type" : Types.INT, "name" : name, "value" : value, "size" : size, "linked" : (len(self.variables)+1 if int(size/8) != i+1 else 0), "position" : len(self.variables)}
                 case I.DECLARE_STR, name, longueur:
                     start_index = len(self.variables)
                     for i in range(int(longueur)):
                         self.variables[len(self.variables)] = {"type" : Types.STR, "name" : name, "value" : "", "linked" : (len(self.variables)+1 if i != int(longueur)-1 else 0), "position" : len(self.variables)}
                     self.variables_indexes[name] = start_index
+        print(f"{self.variables=}")
+        print(f"{self.variables_indexes=}")
         if TAILLE_PILE != 0:
             self.add_instructions("#pile\n")
             self.add_instructions(f"{goto_start()}{'>'*(NOMBRE_DE_RAMS+1)} -- {'>'*len(self.variables)} ({len(self.variables)})\n")
@@ -55,8 +61,11 @@ class Generator:
                     start_index = self.variables_indexes[name]
                     data = self.variables[start_index]
                     if data["type"] == Types.INT:
-                        self.variables[start_index]["value"] = int(value)
-                        self.add_instructions(f"{goto_variables()} {'>'*(start_index+1)} [-] {'+'*int(value)} # set la variable int ({name}) a {int(value)} \n")
+                        if data["size"] == 8:
+                            self.variables[start_index]["value"] = int(value)
+                            self.add_instructions(f"{goto_variables()} {'>'*(start_index+1)} [-] {'+'*int(value)} # set la variable int ({name}) a {int(value)} \n")
+                        else:
+                            raise Exception("TODO : SET INT SIZE > 8")
                     if data["type"] == Types.STR:
                         toshow = value.replace('\n', '\\n')
                         self.add_instructions(f"# set la variable str ({name}) a \"{toshow.replace(',', ' ').replace('+', ' ').replace('-', ' ').replace('.', ' ').replace('[', ' ').replace(']', ' ').replace('>', ' ').replace('<', ' ')}\"\n")
@@ -72,11 +81,17 @@ class Generator:
                 case I.PRINTINTEGER, name:
                     start_index = self.variables_indexes[name]
                     data = self.variables[start_index]
-                    self.add_instructions(f"{goto_variables()} {'>'*(start_index+1)} .# print la variable int ({name}) \n")
+                    if data["size"] == 8:
+                        self.add_instructions(f"{goto_variables()} {'>'*(start_index+1)} .# print la variable int ({name}) \n")
+                    else:
+                        raise Exception("TODO : PRINTINTEGER INT SIZE > 8")
                 case I.PRINTINT, name:
                     start_index = self.variables_indexes[name]
                     data = self.variables[start_index]
-                    self.add_instructions(f"{goto_variables()} {'>'*(start_index+1)} {'+'*48} . {'-'*48} # print la variable int ({name}) \n")
+                    if data["size"] == 8:
+                        self.add_instructions(f"{goto_variables()} {'>'*(start_index+1)} {'+'*48} . {'-'*48} # print la variable int ({name}) \n")
+                    else:
+                        raise Exception("TODO : PRINTINT INT SIZE > 8")
                 case I.PRINTSTRING, name:
                     char = 0
                     start_index = self.variables_indexes[name]
@@ -106,10 +121,14 @@ class Generator:
                 case I.LOAD, load_to, what_to_load:
                     load_to = int(load_to[3:])
                     index = self.variables_indexes[what_to_load]
-                    if load_to > NOMBRE_DE_RAMS-2 :
-                        raise Exception(f"Can't load into {load_to} because the maximum number of rams got reached")
-                    self.add_instructions(f"{goto_variables()}{'>'*(index+1)}[-{goto_start()}>+{'>'*(load_to+2)}+{goto_variables()}{'>'*(index+1)}] #load the value of {what_to_load} in ALWAYS_0 and ram{load_to} \n")
-                    self.add_instructions(f"{goto_start()}>[-{goto_variables()}{'>'*(index+1)}+{goto_start()}>] #push back {what_to_load} in it's place and void ALWAYS_0\n")
+                    data = self.variables[index]
+                    if data["size"] == 8:
+                        if load_to > NOMBRE_DE_RAMS-2 :
+                            raise Exception(f"Can't load into {load_to} because the maximum number of rams got reached")
+                        self.add_instructions(f"{goto_variables()}{'>'*(index+1)}[-{goto_start()}>+{'>'*(load_to+2)}+{goto_variables()}{'>'*(index+1)}] #load the value of {what_to_load} in ALWAYS_0 and ram{load_to} \n")
+                        self.add_instructions(f"{goto_start()}>[-{goto_variables()}{'>'*(index+1)}+{goto_start()}>] #push back {what_to_load} in it's place and void ALWAYS_0\n")
+                    else:
+                        raise Exception("TODO : LOAD INT SIZE > 8")
                 case I.EQUAL, ram1, ram2:
                     ram1 = int(ram1[3:])
                     ram2 = int(ram2[3:])
@@ -118,46 +137,65 @@ class Generator:
                 case I.STORE, where, what:
                     what = int(what[3:])
                     index = self.variables_indexes[where]
-                    self.add_instructions(f"{goto_variables()}{'>'*(index+1)}[-] {goto_start()}{'>'*(what+3)} [- {goto_variables()}{'>'*(index+1)}+{goto_start()}{'>'*(what+3)}] #store the value of ram{what} in {where} \n")
+                    data = self.variables[index]
+                    if data["size"] == 8:
+                        self.add_instructions(f"{goto_variables()}{'>'*(index+1)}[-] {goto_start()}{'>'*(what+3)} [- {goto_variables()}{'>'*(index+1)}+{goto_start()}{'>'*(what+3)}] #store the value of ram{what} in {where} \n")
+                    else:
+                        raise Exception("TODO : STORE INT SIZE > 8")
                 case I.INPUT, name:
                     index = self.variables_indexes[name]
-                    self.add_instructions(f"{goto_variables()}{'>'*(index+1)}, #input in {name} \n")
+                    data = self.variables[index]
+                    if data["size"] == 8:
+                        self.add_instructions(f"{goto_variables()}{'>'*(index+1)}, #input in {name} \n")
+                    else:
+                        raise Exception("TODO : INPUT INT SIZE > 8")
                 case I.CADD, name, number:
                     number = int(number)
                     index = self.variables_indexes[name]
-                    self.add_instructions(f"{goto_variables()}{'>'*(index+1)} {'+'*number if number > 0 else '-'*(-number)} {f'add {number}' if number > 0 else f'remove {-number}'} to {name} \n")
+                    data = self.variables[index]
+                    if data["size"] == 8:
+                        self.add_instructions(f"{goto_variables()}{'>'*(index+1)} {'+'*number if number > 0 else '-'*(-number)} {f'add {number}' if number > 0 else f'remove {-number}'} to {name} \n")
+                    else:
+                        raise Exception("TODO : CADD INT SIZE > 8")
                 case I.ADD, var1, var2, to_store:
                     load_to, what_to_load = "ram0", var1
                     load_to = int(load_to[3:])
                     index = self.variables_indexes[what_to_load]
-                    if load_to > NOMBRE_DE_RAMS-2 :
-                        raise Exception(f"Can't load into {load_to} because the maximum number of rams got reached")
-                    self.add_instructions(f"{goto_variables()}{'>'*(index+1)}[-{goto_start()}>+{'>'*(load_to+2)}+{goto_variables()}{'>'*(index+1)}] #load the value of {what_to_load} in ALWAYS_0 and ram{load_to} \n")
-                    self.add_instructions(f"{goto_start()}>[-{goto_variables()}{'>'*(index+1)}+{goto_start()}>] #push back {what_to_load} in it's place and void ALWAYS_0\n")
-                    load_to, what_to_load = "ram1", var2
-                    load_to = int(load_to[3:])
-                    index = self.variables_indexes[what_to_load]
-                    if load_to > NOMBRE_DE_RAMS-2 :
-                        raise Exception(f"Can't load into {load_to} because the maximum number of rams got reached")
-                    self.add_instructions(f"{goto_variables()}{'>'*(index+1)}[-{goto_start()}>+{'>'*(load_to+2)}+{goto_variables()}{'>'*(index+1)}] #load the value of {what_to_load} in ALWAYS_0 and ram{load_to} \n")
-                    self.add_instructions(f"{goto_start()}>[-{goto_variables()}{'>'*(index+1)}+{goto_start()}>] #push back {what_to_load} in it's place and void ALWAYS_0\n")
-                    self.add_instructions(f"{goto_start()}>>>> [-<+>]")
-                    what, where = "ram0", to_store
-                    what = int(what[3:])
-                    index = self.variables_indexes[where]
-                    self.add_instructions(f"{goto_variables()}{'>'*(index+1)}[-] {goto_start()}{'>'*(what+3)} [- {goto_variables()}{'>'*(index+1)}+{goto_start()}{'>'*(what+3)}] #store the value of ram{what} in {where} \n")
+                    data1, data2, data3 = self.variables[index], self.variables[self.variables_indexes[var2]], self.variables[self.variables_indexes[to_store]]
+                    if data1["size"] == data2["size"] == data3["size"] == 8:
+                        if load_to > NOMBRE_DE_RAMS-2 :
+                            raise Exception(f"Can't load into {load_to} because the maximum number of rams got reached")
+                        self.add_instructions(f"{goto_variables()}{'>'*(index+1)}[-{goto_start()}>+{'>'*(load_to+2)}+{goto_variables()}{'>'*(index+1)}] #load the value of {what_to_load} in ALWAYS_0 and ram{load_to} \n")
+                        self.add_instructions(f"{goto_start()}>[-{goto_variables()}{'>'*(index+1)}+{goto_start()}>] #push back {what_to_load} in it's place and void ALWAYS_0\n")
+                        load_to, what_to_load = "ram1", var2
+                        load_to = int(load_to[3:])
+                        index = self.variables_indexes[what_to_load]
+                        if load_to > NOMBRE_DE_RAMS-2 :
+                            raise Exception(f"Can't load into {load_to} because the maximum number of rams got reached")
+                        self.add_instructions(f"{goto_variables()}{'>'*(index+1)}[-{goto_start()}>+{'>'*(load_to+2)}+{goto_variables()}{'>'*(index+1)}] #load the value of {what_to_load} in ALWAYS_0 and ram{load_to} \n")
+                        self.add_instructions(f"{goto_start()}>[-{goto_variables()}{'>'*(index+1)}+{goto_start()}>] #push back {what_to_load} in it's place and void ALWAYS_0\n")
+                        self.add_instructions(f"{goto_start()}>>>> [-<+>]")
+                        what, where = "ram0", to_store
+                        what = int(what[3:])
+                        index = self.variables_indexes[where]
+                        self.add_instructions(f"{goto_variables()}{'>'*(index+1)}[-] {goto_start()}{'>'*(what+3)} [- {goto_variables()}{'>'*(index+1)}+{goto_start()}{'>'*(what+3)}] #store the value of ram{what} in {where} \n")
+                    else:
+                        raise Exception("TODO : ADD INT SIZE > 8")
                 case I.WHILE, variable, while_instructions:
                     index = self.variables_indexes[variable]
-                    self.add_instructions(f"{goto_variables()}{'>'*(index+1)}[-{goto_start()}>+>+{goto_variables()}{'>'*(index+1)}] #load the value of {variable} in ALWAYS_0 and IFTEMP \n")
-                    self.add_instructions(f"{goto_start()}>[-{goto_variables()}{'>'*(index+1)}+{goto_start()}>] #push back {variable} in it's place and void ALWAYS_0\n")
-                    while_generateur = Generator(self.debug)
-                    while_generateur.variables = self.variables
-                    while_generateur.variables_indexes = self.variables_indexes
-                    while_generateur.generate(while_instructions)
-                    newline = "\n"
-                    self.add_instructions(f"{goto_start()}>> [[-] #start of the while {f'{newline}    '.join(while_generateur.instructions.split('CODE :')[1].split(newline))}")
-                    self.add_instructions(f"{goto_variables()}{'>'*(index+1)}[-{goto_start()}>+>+{goto_variables()}{'>'*(index+1)}]{goto_start()}>[-{goto_variables()}{'>'*(index+1)}+{goto_start()}>] #reload la variable pour le while \n>]# end of the while\n")
-    
+                    data = self.variables[index]
+                    if data["size"] == 8:
+                        self.add_instructions(f"{goto_variables()}{'>'*(index+1)}[-{goto_start()}>+>+{goto_variables()}{'>'*(index+1)}] #load the value of {variable} in ALWAYS_0 and IFTEMP \n")
+                        self.add_instructions(f"{goto_start()}>[-{goto_variables()}{'>'*(index+1)}+{goto_start()}>] #push back {variable} in it's place and void ALWAYS_0\n")
+                        while_generateur = Generator(self.debug)
+                        while_generateur.variables = self.variables
+                        while_generateur.variables_indexes = self.variables_indexes
+                        while_generateur.generate(while_instructions)
+                        newline = "\n"
+                        self.add_instructions(f"{goto_start()}>> [[-] #start of the while {f'{newline}    '.join(while_generateur.instructions.split('CODE :')[1].split(newline))}")
+                        self.add_instructions(f"{goto_variables()}{'>'*(index+1)}[-{goto_start()}>+>+{goto_variables()}{'>'*(index+1)}]{goto_start()}>[-{goto_variables()}{'>'*(index+1)}+{goto_start()}>] #reload la variable pour le while \n>]# end of the while\n")
+                    else:
+                        raise Exception("TODO : WHILE INT SIZE > 8")
     
     def add_instructions(self, instructions):
         self.instructions += instructions

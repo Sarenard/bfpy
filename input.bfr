@@ -1,4 +1,5 @@
-#declare int var1
+#declare 8int var1
+#declare 16int var2
 
 macro main
     5 var1 set
