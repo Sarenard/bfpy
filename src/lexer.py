@@ -27,6 +27,8 @@ class Lexer:
                 elif instruction[instruction_index + 1].split("int")[0] != "8":
                     name = instructions[instruction_index + 2]
                     size = instructions[instruction_index + 1].split("int")[0]
+                    if not size % 8 == 0:
+                        raise Exception("Size of int must be divisible by 8")
                     self.instructions.append((I.DECLARE_INT, name, int(size)))
                     instruction_index += 2
                 if instructions[instruction_index + 1] == "str":
