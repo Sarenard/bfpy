@@ -44,6 +44,9 @@ class Lexer:
                         raise Exception("Size of int must be divisible by 8")
                     self.instructions.append((I.DECLARE_INT, name, int(size)))
                     instruction_index += 2
+            elif instruction == "remove":
+                name = instructions[instruction_index - 1]
+                self.instructions.append((I.REMOVE, name))
             elif instruction == "printstring":
                 name = instructions[instruction_index - 1]
                 self.instructions.append((I.PRINTSTRING, name))

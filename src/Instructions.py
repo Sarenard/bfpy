@@ -13,6 +13,7 @@ class I(IntEnum):
     SET = auto()
     INPUT = auto()
     APPEND = auto()
+    REMOVE = auto()
     
     IF = auto()
     WHILE = auto()

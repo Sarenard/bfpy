@@ -1,7 +1,8 @@
-#declare list liste_test 2
 #declare int test
+#declare list liste_test 2
 
 macro main
     10 test set
     test liste_test append
+    liste_test remove
 end
