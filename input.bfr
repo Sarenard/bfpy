@@ -1,9 +1,7 @@
-#declare int var1
+#declare list liste_test 2
+#declare int test
 
 macro main
-    5 var1 set
-    var1 while
-        "test\N1234\n" rawprintstring
-        var1 -= 1
-    end
+    10 test set
+    test liste_test append
 end

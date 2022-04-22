@@ -3,6 +3,7 @@ from enum import IntEnum, auto
 class I(IntEnum):
     DECLARE_INT = auto()
     DECLARE_STR = auto()
+    DECLARE_LIST = auto()
     
     RAWPRINTSTRING = auto()
     PRINTSTRING = auto()
@@ -11,6 +12,7 @@ class I(IntEnum):
     
     SET = auto()
     INPUT = auto()
+    APPEND = auto()
     
     IF = auto()
     WHILE = auto()
@@ -25,3 +27,5 @@ class I(IntEnum):
 class Types(IntEnum):
     INT = auto()
     STR = auto()
+    LIST = auto()
+    LIST_CURRENT_INDEX = auto()
