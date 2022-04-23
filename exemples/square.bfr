@@ -1,0 +1,36 @@
+#declare int x
+#declare int y
+#declare int w
+#declare int v
+#declare int u
+
+macro main
+    3 x set
+    x while
+        1 w cadd
+        1 v cadd
+        1 y cadd
+        -1 x cadd
+    end
+    w while
+            1 x cadd
+        -1 w cadd
+    end
+    -1 y cadd
+    y while 
+        v while
+            1 w cadd
+            1 u cadd
+            -1 v cadd
+        end
+        u while
+            1 v cadd
+            -1 u cadd
+        end
+        w while
+            1 x cadd
+            -1 w cadd
+        end
+        -1 y cadd
+    end
+end

@@ -46,7 +46,7 @@ class Generator:
                 case I.DECLARE_LIST, name, longueur:
                     # TODO : CHANGE THE 2N COMPLEXITY TO A N+1 COMPLEXITY
                     start_index = len(self.variables)
-                    self.variables[len(self.variables)] = {"type" : Types.INT, "name" : name, "value" : value, "size" : 8, "linked" : len(self.variables)+1, "position" : len(self.variables)}
+                    self.variables[len(self.variables)] = {"type" : Types.INT, "name" : name, "value" : value, "size" : 8, "linked" : len(self.variables)+1, "position" : len(self.variables)} #TODO : ADAPT THE SIZE OF THE LENGTH OF THE LIST
                     for i in range(int(longueur)):
                         self.variables[len(self.variables)] = {"type" : Types.LIST_CURRENT_INDEX, "name" : name, "value" : 0, "linked" : len(self.variables)+1, "position" : len(self.variables), "len" : len(self.variables)-1}
                         self.variables[len(self.variables)] = {"type" : Types.LIST, "name" : name, "value" : 0, "linked" : (len(self.variables)+1 if i != int(longueur)-1 else 0), "position" : len(self.variables), "len" : len(self.variables)-1}
@@ -59,7 +59,8 @@ class Generator:
         else:
             self.add_instructions("#nombre de variables\n")
             self.add_instructions(f"{goto_start()}> {'>'*(NOMBRE_DE_RAMS+1)} --- {'>'*len(self.variables)} ({len(self.variables)})\n")
-        self.add_instructions("INIT DES LISTES : \n")
+        if any(self.variables[i]["type"] == Types.LIST for i in self.variables):
+            self.add_instructions("INIT DES LISTES : \n")
         for instruction in instructions:
             match instruction:
                 case I.DECLARE_LIST, name, longueur:
@@ -74,11 +75,10 @@ class Generator:
                     start_index = self.variables_indexes[name]
                     data = self.variables[start_index]
                     if data["type"] == Types.INT:
-                        if data["size"] == 8:
-                            self.variables[start_index]["value"] = int(value)
-                            self.add_instructions(f"{goto_variables()} {'>'*(start_index+1)} [-] {'+'*int(value)} # set la variable int ({name}) a {int(value)} \n")
-                        else:
-                            raise Exception("TODO : SET INT SIZE > 8")
+                        value = int(value)
+                        self.variables[start_index]["value"] = value
+                        valeurs = [eval(f"{value}{'//250'*r}%250") for r in range(0, int(data["size"]/8))]
+                        self.add_instructions(f"{goto_variables()} {'>'*(start_index+1)} [-] {'>'.join(['+'*int(valeur) for valeur in valeurs])} # set la variable int ({name}) a {int(value)} \n")
                     if data["type"] == Types.STR:
                         toshow = value.replace('\n', '\\n')
                         self.add_instructions(f"# set la variable str ({name}) a \"{toshow.replace(',', ' ').replace('+', ' ').replace('-', ' ').replace('.', ' ').replace('[', ' ').replace(']', ' ').replace('>', ' ').replace('<', ' ')}\"\n")
@@ -158,10 +158,7 @@ class Generator:
                 case I.INPUT, name:
                     index = self.variables_indexes[name]
                     data = self.variables[index]
-                    if data["size"] == 8:
-                        self.add_instructions(f"{goto_variables()}{'>'*(index+1)}, #input in {name} \n")
-                    else:
-                        raise Exception("TODO : INPUT INT SIZE > 8")
+                    self.add_instructions(f"{goto_variables()}{'>'*(index+1)},{'>[-]'*((data['size']-8)//8)} #input in {name}")
                 case I.CADD, name, number:
                     number = int(number)
                     index = self.variables_indexes[name]
