@@ -1,9 +1,17 @@
+#declare int variable1
 #declare int test
 #declare int length
-#declare list liste_test 2
+#declare list liste_test 10
 
 macro main
     10 test set
-    test liste_test append
     length liste_test getlen
+    8 variable1 set
+    variable1 while
+        test liste_test append
+        -1 variable1 cadd
+    end
+    length liste_test getlen
+    length printint
+    "\n" rawprintstring
 end
