@@ -46,13 +46,14 @@ class Generator:
                 case I.DECLARE_LIST, name, longueur:
                     # TODO : CHANGE THE 2N COMPLEXITY TO A N+1 COMPLEXITY
                     start_index = len(self.variables)
+                    self.variables[len(self.variables)] = {"type" : Types.INT, "name" : name, "value" : value, "size" : 8, "linked" : len(self.variables)+1, "position" : len(self.variables)}
                     for i in range(int(longueur)):
-                        self.variables[len(self.variables)] = {"type" : Types.LIST_CURRENT_INDEX, "name" : name, "value" : 0, "linked" : len(self.variables)+1, "position" : len(self.variables)}
-                        self.variables[len(self.variables)] = {"type" : Types.LIST, "name" : name, "value" : 0, "linked" : (len(self.variables)+1 if i != int(longueur)-1 else 0), "position" : len(self.variables)}
+                        self.variables[len(self.variables)] = {"type" : Types.LIST_CURRENT_INDEX, "name" : name, "value" : 0, "linked" : len(self.variables)+1, "position" : len(self.variables), "len" : len(self.variables)-1}
+                        self.variables[len(self.variables)] = {"type" : Types.LIST, "name" : name, "value" : 0, "linked" : (len(self.variables)+1 if i != int(longueur)-1 else 0), "position" : len(self.variables), "len" : len(self.variables)-1}
                     self.variables_indexes[name] = start_index
         if TAILLE_PILE != 0:
             self.add_instructions("#pile\n")
-            self.add_instructions(f"{goto_start()}{'>'*(NOMBRE_DE_RAMS+1)} -- {'>'*len(self.variables)} ({len(self.variables)})\n")
+            self.add_instructions(f"{goto_start()}{'>'*(NOMBRE_DE_RAMS+1)} -- {'>'*len(self.variables)} ({NOMBRE_DE_RAMS})\n")
             self.add_instructions("#nombre de variables\n")
             self.add_instructions(f"{goto_start()}> {'>'*(NOMBRE_DE_RAMS+1+TAILLE_PILE+1+1)} --- {'>'*len(self.variables)} ({len(self.variables)})\n")
         else:
@@ -62,7 +63,7 @@ class Generator:
         for instruction in instructions:
             match instruction:
                 case I.DECLARE_LIST, name, longueur:
-                    index = self.variables_indexes[name]
+                    index = self.variables_indexes[name]+1
                     data = self.variables[index]
                     self.add_instructions(f"{goto_variables()}{'>'*(index+1)}------\n")
         self.add_instructions("\n")
@@ -211,22 +212,34 @@ class Generator:
                 case I.APPEND, name_list, name_value:
                     if self.variables[self.variables_indexes[name_value]]["size"] == 8:
                         value_index = self.variables_indexes[name_value]
-                        list_index = self.variables_indexes[name_list]
+                        list_index = self.variables_indexes[name_list]+1
                         goto_current = f"{goto_variables()}{'>'*(list_index+1)}++++++[------>++++++]------>"
                         goto_ram0 = f"{goto_start()}>>>"
                         goto_value = f"{goto_variables()}{'>'*(value_index+1)}"
-                        load_value = f"{goto_value}[-{goto_start()}>+>>+{goto_value}]{goto_start()}> #load the value of {name_value} into ram\n"
-                        store_value = f"[-{goto_value}+{goto_start()}>]{goto_current}[-]{goto_ram0}[-{goto_current}+{goto_ram0}] #store it in the right place\n"
+                        load_value = f"{goto_value}[-{goto_start()}>+>>+{goto_value}] #load the value of {name_value} into ram\n"
+                        store_value = f"{goto_start()}>[-{goto_value}+{goto_start()}>]{goto_current}[-]{goto_ram0}[-{goto_current}+{goto_ram0}] #store it in the right place\n"
                         move_cursor = f"{goto_current}<++++++>>------ #change the list current cursor\n"
+                        add_to_len = f"{goto_variables()}{'>'*(self.variables_indexes[name_list]+1)}+ #add one to the len of the list\n"
                         self.add_instructions(load_value)
                         self.add_instructions(store_value)
                         self.add_instructions(move_cursor)
+                        self.add_instructions(add_to_len)
                     else:
                         raise Exception("TODO : APPEND INT SIZE > 8")
                 case I.REMOVE, name_list:
                     list_index = self.variables_indexes[name_list]
                     self.add_instructions(f"{goto_variables()}{'>'*(list_index+1)}++++++[------>++++++]------<[-]>++++++<<------#remove the last element of {name_list}\n")
-                # TODO : incrementer la longueur de la liste a chaque append et la décrémenter a chaque remove
+                    self.add_instructions(f"{goto_variables()}{'>'*(self.variables_indexes[name_list]+1)}- #remove one to the len of the list\n")
+                case I.GETLEN, name_list, int_name:
+                    if self.variables[self.variables_indexes[int_name]]["size"] == 8:
+                        list_index = self.variables_indexes[name_list]
+                        int_index = self.variables_indexes[int_name]
+                        goto_len_list = f"{goto_variables()}{'>'*(list_index+1)}"
+                        goto_int = f"{goto_variables()}{'>'*(int_index+1)}"
+                        self.add_instructions(f"{goto_len_list}[-{goto_start()}>+>>+{goto_len_list}]{goto_start()}>[-{goto_len_list}+{goto_start()}>] #load the value into ram\n")
+                        self.add_instructions(f"{goto_start()}>>>[-{goto_int}+{goto_start()}>>>] #put it in the int\n")
+                    else:
+                        raise Exception("TODO : GETLEN INT SIZE > 8")
     
     def add_instructions(self, instructions):
         self.instructions += instructions

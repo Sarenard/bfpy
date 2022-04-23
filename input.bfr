@@ -1,8 +1,9 @@
 #declare int test
+#declare int length
 #declare list liste_test 2
 
 macro main
     10 test set
     test liste_test append
-    liste_test remove
+    length liste_test getlen
 end

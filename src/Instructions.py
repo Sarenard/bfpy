@@ -24,6 +24,7 @@ class I(IntEnum):
     
     LOAD = auto()
     STORE = auto()
+    GETLEN = auto()
     
 class Types(IntEnum):
     INT = auto()

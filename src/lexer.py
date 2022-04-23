@@ -28,7 +28,7 @@ class Lexer:
                 elif instructions[instruction_index + 1] == "list":
                     name = instructions[instruction_index + 2]
                     longueur = instructions[instruction_index + 3]
-                    if int(longueur) > 250:
+                    if int(longueur) > 249:
                         raise Exception("liste de taillle 250 maximum")
                     self.instructions.append((I.DECLARE_LIST, name, longueur))
                     instruction_index += 3
@@ -131,6 +131,10 @@ class Lexer:
                 if_lexer = Lexer(self.debug)
                 if_lexer.parse(temp_instructions)
                 self.instructions.append((I.WHILE, name, if_lexer.instructions, ))
+            elif instruction in ["getlen", "getlenght"]:
+                list_name = instructions[instruction_index - 1]
+                int_name = instructions[instruction_index - 2]
+                self.instructions.append((I.GETLEN, list_name, int_name))
 
             instruction_index += 1
             
