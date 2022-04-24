@@ -31,7 +31,7 @@ int main(int argc, char **argv)
      *  over at the end they are not valid BF commands and so are ignored.
      */
     // while((ch = getc(ifd)) != EOF && (ifd!=stdin || ch != '!' || j || !pgm)) {
-    while((ch = getc(ifd)) != EOF && (ifd!=stdin || j || !pgm)) { // removed the ! feature (not compiled yet)
+    while((ch = getc(ifd)) != EOF && (ifd!=stdin || j || !pgm)) { // removed the ! feature (not compiled yet i think)
         if (ch == '<' || ch == '>' || ch == '+' || ch == '-' ||
             ch == ',' || ch == '.' || ch == '[' || (ch == ']' && j)) {
             if ((n = calloc(1, sizeof*n)) == 0) {

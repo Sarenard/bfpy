@@ -1,5 +1,7 @@
 #declare 16int x
+#declare 16int y
 
 macro main
     1000 x set
+    x printint
 end
