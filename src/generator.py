@@ -169,6 +169,7 @@ class Generator:
                     data = self.variables[index]
                     self.add_instructions(f"{goto_variables()}{'>'*(index+1)},{'>[-]'*((data['size']-8)//8)} #input in {name}")
                 case I.CADD, name, number:
+                    # TODO : handle underflow
                     number = int(number)
                     index = self.variables_indexes[name]
                     data = self.variables[index]

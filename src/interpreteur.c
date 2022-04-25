@@ -7,7 +7,17 @@
  
 struct bfi { char cmd; struct bfi *next, *jmp; };
 struct mem { char val; struct mem *next, *prev; };
- 
+
+
+void remove_spaces(char* s) {
+    char* d = s;
+    do {
+        while (*d == ' ') {
+            ++d;
+        }
+    } while (*s++ = *d++);
+}
+
 int main(int argc, char **argv)
 {
     FILE * ifd;
@@ -50,7 +60,18 @@ int main(int argc, char **argv)
     while(j) { p = j; j = j->jmp; p->jmp = 0; p->cmd = ' '; }
  
     if (ifd!=stdin) fclose(ifd);
- 
+
+    for (p = pgm; p; p = p->next) {
+        if (p->cmd == '[' && p->next->cmd == '-' && p->next->next->cmd == ']') { /* replace each [-] with an a */
+            p->cmd = 'a'; p->next->cmd = 0; p->next->next->cmd = 0;}
+        else if (p->cmd == '[' && p->next->cmd == '+' && p->next->next->cmd == ']') { /* replace each [+] with an a */
+            p->cmd = 'a'; p->next->cmd = 0; p->next->next->cmd = 0;}
+    }
+    
+    // for (p=pgm; p; p=p->next) {
+    //     printf("%c", p->cmd);
+    // }
+
     /* Execute the loaded BF program */
     char c;
     for(n=pgm; n; n=n->next)
@@ -80,6 +101,8 @@ int main(int argc, char **argv)
                 }
                 m=m->next;
                 break;
+            case 'a':
+                m->val = 0;
         }
  
     return 0;

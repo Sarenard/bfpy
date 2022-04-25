@@ -2,6 +2,6 @@
 
 macro main
     10 x set 
-    249 x cadd
+    2 x cadd
     x printint "\n" rawprintstring
 end
