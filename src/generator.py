@@ -182,6 +182,8 @@ class Generator:
                         new_to_add = f"{copy_to_ram0}{add_one}{compare_to_250}{do_truc}{put_back}"
                         new_to_remove = f"{copy_to_ram0}{remove_one}{compare_to_250}{do_truc}{put_back}"
                         to_add = (new_to_add if number > 0 else new_to_remove)*abs(number)
+                        # TODO : simplifier en mettant dans une boucle (réduit la taille du code final) (taille max 255)
+                        # TODO : prendre la boucle et faire des boucles multiples
                         self.add_instructions(f"{goto_variables()}{'>'*(index+1)} {to_add} {f'add {number}' if number > 0 else f'remove {-number}'} to {name} \n")
                     else:
                         raise Exception("TODO : CADD INT SIZE > 8")
