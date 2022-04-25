@@ -1,7 +1,7 @@
-#declare 16int x
-#declare 16int y
+#declare 8int x
 
 macro main
-    1000 x set
-    x printint
+    10 x set 
+    249 x cadd
+    x printint "\n" rawprintstring
 end
