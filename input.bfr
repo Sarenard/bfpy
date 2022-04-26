@@ -1,7 +1,7 @@
 #declare 8int x
 
 macro main
-    10 x set 
-    2 x cadd
+    1 x set 
+    -1 x cadd
     x printint "\n" rawprintstring
 end
