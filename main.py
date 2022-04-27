@@ -1,10 +1,6 @@
 # python .\main.py -f .\input.bfr -r
 # python .\main.py -f .\input.bfr -toc -runcc
 
-# TODO : LISTS
-# TODO : INTS MORE THAN 8 BITs
-# TODO : FIX + (WHEN DONE, IT SHOULDNT REACH MORE THAN 250)
-
 from src.generator import Generator
 from src.parseur import Parseur
 from src.lexer import Lexer

@@ -54,6 +54,7 @@ class Generator:
                     self.variables_indexes[name] = start_index
                 case I.DECLARE_LIST, name, longueur:
                     # TODO : CHANGE THE 2N COMPLEXITY TO A N+1 COMPLEXITY
+                    # TODO : make lists with stacks
                     start_index = len(self.variables)
                     self.variables[len(self.variables)] = {"type" : Types.INT, "name" : name, "value" : value, "size" : 8, "linked" : len(self.variables)+1, "position" : len(self.variables)} #TODO : ADAPT THE SIZE OF THE LENGTH OF THE LIST
                     for i in range(int(longueur)):
@@ -167,7 +168,7 @@ class Generator:
                 case I.INPUT, name:
                     index = self.variables_indexes[name]
                     data = self.variables[index]
-                    self.add_instructions(f"{goto_variables()}{'>'*(index+1)},{'>[-]'*((data['size']-8)//8)} #input in {name}")
+                    self.add_instructions(f"{goto_variables()}{'>'*(index+1)},{'>[-]'*((data['size']-8)//8)} #input in {name}\n")
                 case I.CADD, name, number:
                     number = int(number)
                     index = self.variables_indexes[name]
@@ -183,8 +184,7 @@ class Generator:
                         put_back = f"{goto_start()}>[-{goto_variables()}{'>'*(index+1)}+{goto_start()}>]"
                         new_to_add = f"{copy_to_ram0}{add_one}{compare_to_250}{do_truc_250}{put_back}"
                         new_to_remove = f"{copy_to_ram0}{compare_to_0}{do_truc_0}{put_back0}"
-                        to_add = (new_to_add if number > 0 else new_to_remove)*abs(number)
-                        # TODO : simplifier en mettant dans une boucle (réduit la taille du code final) (taille max 255)
+                        to_add = f"{goto_start()}>>>>>>>{'+'*abs(number)}[-{(new_to_add if number > 0 else new_to_remove)}{goto_start()}>>>>>>>]"
                         # TODO : prendre la boucle et faire des boucles multiples
                         self.add_instructions(f"{goto_variables()}{'>'*(index+1)} {to_add} {f'add {number}' if number > 0 else f'remove {-number}'} to {name} \n")
                     else:

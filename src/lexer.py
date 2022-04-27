@@ -4,6 +4,8 @@ from src.Instructions import I
 MAX_MACROS = 1000
 MAX_INCLUDES = 1000
 
+# TODO : functions and return values
+
 class Lexer:
     def __init__(self, debug):
         self.debug = debug

@@ -66,6 +66,8 @@ int main(int argc, char **argv)
             p->cmd = 'a'; p->next->cmd = 0; p->next->next->cmd = 0;}
         else if (p->cmd == '[' && p->next->cmd == '+' && p->next->next->cmd == ']') { /* replace each [+] with an a */
             p->cmd = 'a'; p->next->cmd = 0; p->next->next->cmd = 0;}
+        // else if (p->cmd == '+' && p->next->cmd == '[' && p->next->next->cmd == '-' && p->next->next->next->cmd == '<' && p->next->next->next->next->cmd == '+' && p->next->next->next->next->next->cmd == ']' && p->next->next->next->next->next->next->cmd == '-') { /* replace each +[-<+]- with an b */
+        //     p->cmd = 'b'; p->next->cmd = 0; p->next->next->cmd = 0; p->next->next->next->cmd = 0; p->next->next->next->next->cmd = 0; p->next->next->next->next->next->cmd = 0; p->next->next->next->next->next->next->cmd = 0;}
     }
     
     // for (p=pgm; p; p=p->next) {
@@ -103,6 +105,13 @@ int main(int argc, char **argv)
                 break;
             case 'a':
                 m->val = 0;
+            // case 'b':
+            //     do {
+            //         if (!(n=n->next)) {
+            //             fprintf(stderr, "%s: Hit end of tape\n", argv[0]);
+            //             exit(1);
+            //         }
+            //     } while (m->val != 255);
         }
  
     return 0;
