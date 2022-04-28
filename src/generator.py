@@ -96,12 +96,12 @@ class Generator:
                                 self.add_instructions(f"ILLEGAL TO PRINT : {goto_variables()} {'>'*(index+1)} [-] {'+'*int(nb)}\n")
                             data = self.variables[data["linked"]]
                 case I.PRINTINTEGER, name:
-                    start_index = self.variables_indexes[name]
+                    index = self.variables_indexes[name]
                     data = self.variables[start_index]
-                    if data["size"] == 8:
-                        self.add_instructions(f"{goto_variables()} {'>'*(start_index+1)} .# print la variable int ({name}) \n")
-                    else:
-                        raise Exception("TODO : PRINTINTEGER INT SIZE > 8")
+                    while not data["linked"] == 0:
+                        self.add_instructions(f"{goto_variables()} {'>'*(index+1)} .")
+                        index += 1
+                    self.add_instructions(f"# print la variable int ({name}) \n")
                 case I.PRINTINT, name:
                     # todo : print the real value instead
                     print_case = lambda index : f"{goto_variables()}{'>'*(index+1)}[-{goto_start()}>+{goto_variables()}{'>'*(index+1)}] {goto_start()}>>>++++++++++<<[->+>-[>+>>]>[+[-<+>]>+>>]<<<<<<]>>[-]>>>++++++++++<[->-[>+>>]>[+[-<+>]>+>>]<<<<<]>[-]>>[>++++++[-<++++++++>]<.<<+>+>[-]]<[<[->-<]++++++[->++++++++<]>.[-]]<<++++++[-<++++++++>]<.[-]<<[-<+>]{goto_start()}>[-{goto_variables()}{'>'*(index+1)}+{goto_start()}>]"
@@ -109,7 +109,6 @@ class Generator:
                     data = self.variables[index]
                     truc = 0
                     while not data["linked"] == 0:
-                        data = self.variables[data["linked"]]
                         self.add_instructions(f"{print_case(index)}{to_char(f'*250^{truc} ')}")
                         index, truc = index+1, truc+1
                     data = self.variables[data["linked"]]
@@ -180,7 +179,8 @@ class Generator:
                         compare_to_0 = f"{goto_start()}>>>>[-]<[->-<]+>[<->[-]]"
                         do_truc_250 = f"{goto_start()}>>+>[<->-<<[-]>>]<[-<+>]"
                         do_truc_0 = f"{goto_start()}>>+>[-<->{goto_variables()}{'>'*(index+1)}[-]------{goto_start()}>>>]"
-                        put_back0 = f"{goto_start()}>[-{goto_variables()}{'>'*(index+1)}+{goto_start()}>]{goto_start()}>>[[-]{goto_variables()}{'>'*(index+1)}-{goto_start()}>>]"
+                        remove_one = f"{goto_start()}>>[[-]{goto_variables()}{'>'*(index+1)}-{goto_start()}>>]"
+                        put_back0 = f"{goto_start()}>[-{goto_variables()}{'>'*(index+1)}+{goto_start()}>]{remove_one}"
                         put_back = f"{goto_start()}>[-{goto_variables()}{'>'*(index+1)}+{goto_start()}>]"
                         new_to_add = f"{copy_to_ram0}{add_one}{compare_to_250}{do_truc_250}{put_back}"
                         new_to_remove = f"{copy_to_ram0}{compare_to_0}{do_truc_0}{put_back0}"

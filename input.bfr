@@ -1,38 +1,18 @@
-#declare int x
-#declare int y
-#declare int w
-#declare int v
-#declare int u
+#declare int final
+#declare int a
+
+macro getinput input -48 a cadd end
+macro add_1 while 100 final cadd -1 a cadd end end
+macro add_10 while 10 final cadd -1 a cadd end end
+macro add_100 while 1 final cadd -1 a cadd end end
 
 macro main
-    x input
-    -48 x cadd
-    x while
-        1 w cadd
-        1 v cadd
-        1 y cadd
-        -1 x cadd
-    end
-    w while
-        1 x cadd
-        -1 w cadd
-    end
-    -1 y cadd
-    y while 
-        v while
-            1 w cadd
-            1 u cadd
-            -1 v cadd
-        end
-        u while
-            1 v cadd
-            -1 u cadd
-        end
-        w while
-            1 x cadd
-            -1 w cadd
-        end
-        -1 y cadd
-    end
-    x printint "\n" rawprintstring
+    a getinput
+    a add_1
+    a getinput
+    a add_10
+    a getinput
+    a add_100
+
+    final printint "\n" rawprintstring
 end
