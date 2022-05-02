@@ -5,7 +5,7 @@ macro main
     1 true set
     250 a set
     true while
-        -1 a cadd
+        -10 a cadd
         a printint "\n" rawprintstring
     end
 end

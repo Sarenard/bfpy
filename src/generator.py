@@ -209,7 +209,7 @@ class Generator:
                         remove_250 = f"{goto_start()}>>>>>[{copy(1)}{goto_start()}>>+>[[-]<-<-{put_back(1)}{goto_start()}>]"
                         check_0 = f"{goto_start()}>>[[-]{goto_variables()}{'>'*(index+2)}[-]-------{goto_start()}>>[-]]{goto_start()}>>>>>[-]]"
                         remove = f"{copy(0)}{if_0}{set_249}{remove_250}{check_0}"
-                        self.add_instructions(f"{add if number > 0 else remove} {f'add {number}' if number > 0 else f'remove {-number}'} to {name}(16) \n")
+                        self.add_instructions(f"{add*abs(number) if number > 0 else remove*abs(number)} {f'add {number}' if number > 0 else f'remove {-number}'} to {name}(16) \n")
                     else:
                         raise Exception("TODO : CADD INT SIZE > 16")
                 case I.ADD, var1, var2, to_store:
