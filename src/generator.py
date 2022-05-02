@@ -3,14 +3,6 @@ from tracemalloc import start
 from src.Instructions import I, Types
 import datetime
 
-"""
->+++++++++++[-<+++++++++++++++>] # initialize 165 at first cell
->++++++++++<<[->+>-[>+>>]>[+[-<+>]>+>>]<<<<<<]>>[-]>>>++++++++++<[->-[>+>>]>[+[-
-<+>]>+>>]<<<<<]>[-]>>[>++++++[-<++++++++>]<.<<+>+>[-]]<[<[->-<]++++++[->++++++++
-<]>.[-]]<<++++++[-<++++++++>]<.[-]<<[-<+>]
-7 RAM
-"""
-
 #macros
 get_id = lambda dict, value : list(dict.keys()).index(value)
 goto_start = lambda : "+[-<+]-"
@@ -21,6 +13,7 @@ to_char = lambda string : f"{goto_start()}>{'.[-]'.join(['+'*ord(x) for x in str
 
 NOMBRE_DE_RAMS = 10
 assert NOMBRE_DE_RAMS >= 10, "Nombre de RAMs insuffisant, merci de mettre 10 minimum"
+assert NOMBRE_DE_RAMS == 10, "Penser a changer le nombre dans l'interpretuer"
 INDEX_DECALE = NOMBRE_DE_RAMS
 
 class Generator:
@@ -193,7 +186,8 @@ class Generator:
                         # TODO : prendre la boucle et faire des boucles multiples
                         self.add_instructions(f"{to_add} {f'add {number}' if number > 0 else f'remove {-number}'} to {name}(8) \n")
                     elif data["size"] == 16:
-                        # TODO : boucles
+                        # TODO : faire ça dans une boucle   
+                        # TODO : prendre la boucle et faire des boucles multiples
                         copy = lambda nb : f"{goto_variables()}{'>'*(index+nb+1)}[-{goto_start()}>+>>+{goto_variables()}{'>'*(index+nb+1)}]"
                         add_one = f"{goto_start()}>>>+"
                         compare_to_250 = f"{goto_start()}>>>>------<[->-<]+>[<->[-]]"
@@ -212,8 +206,6 @@ class Generator:
                         self.add_instructions(f"{add*abs(number) if number > 0 else remove*abs(number)} {f'add {number}' if number > 0 else f'remove {-number}'} to {name}(16) \n")
                     else:
                         raise Exception("TODO : CADD INT SIZE > 16")
-                case I.ADD, var1, var2, to_store:
-                    raise Exception("Do not use add : old function")
                 case I.WHILE, variable, while_instructions:
                     index = self.variables_indexes[variable]
                     data = self.variables[index]

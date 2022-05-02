@@ -38,7 +38,7 @@ def interpreter(code, debug):
         elif command == "b":
             cellptr = 0
         elif command == "c":
-            cellptr = 12
+            cellptr = 10+2
         codeptr += 1
         if debug : print("[INTERPRETATION] :", cells, f"pointer sur {cellptr}")
 

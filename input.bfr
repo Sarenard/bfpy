@@ -1,11 +1,5 @@
 #declare 16int a
-#declare 8int true
 
 macro main
-    1 true set
-    250 a set
-    true while
-        -10 a cadd
-        a printint "\n" rawprintstring
-    end
+    5684 a set
 end
