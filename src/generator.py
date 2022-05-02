@@ -20,6 +20,7 @@ goto_variables = lambda : goto_anchor(3)
 to_char = lambda string : f"{goto_start()}>{'.[-]'.join(['+'*ord(x) for x in string])}.[-]"
 
 NOMBRE_DE_RAMS = 10
+assert NOMBRE_DE_RAMS >= 10, "Nombre de RAMs insuffisant, merci de mettre 10 minimum"
 INDEX_DECALE = NOMBRE_DE_RAMS
 
 class Generator:
@@ -97,11 +98,11 @@ class Generator:
                             data = self.variables[data["linked"]]
                 case I.PRINTINTEGER, name:
                     index = self.variables_indexes[name]
-                    data = self.variables[start_index]
+                    data = self.variables[index]
                     while not data["linked"] == 0:
-                        self.add_instructions(f"{goto_variables()} {'>'*(index+1)} .")
-                        index += 1
-                    self.add_instructions(f"# print la variable int ({name}) \n")
+                        self.add_instructions(f"{goto_variables()}{'>'*(index+1)}.")
+                        index, data = index+1, self.variables[data["linked"]]
+                    self.add_instructions(f"{goto_variables()}{'>'*(index+1)}.# print la variable int ({name}) \n")
                 case I.PRINTINT, name:
                     # todo : print the real value instead
                     print_case = lambda index : f"{goto_variables()}{'>'*(index+1)}[-{goto_start()}>+{goto_variables()}{'>'*(index+1)}] {goto_start()}>>>++++++++++<<[->+>-[>+>>]>[+[-<+>]>+>>]<<<<<<]>>[-]>>>++++++++++<[->-[>+>>]>[+[-<+>]>+>>]<<<<<]>[-]>>[>++++++[-<++++++++>]<.<<+>+>[-]]<[<[->-<]++++++[->++++++++<]>.[-]]<<++++++[-<++++++++>]<.[-]<<[-<+>]{goto_start()}>[-{goto_variables()}{'>'*(index+1)}+{goto_start()}>]"
@@ -110,10 +111,9 @@ class Generator:
                     truc = 0
                     while not data["linked"] == 0:
                         self.add_instructions(f"{print_case(index)}{to_char(f'*250^{truc} ')}")
-                        index, truc = index+1, truc+1
+                        index, truc, data = index+1, truc+1, self.variables[index+1]
                     data = self.variables[data["linked"]]
                     self.add_instructions(f"{print_case(index)}{to_char(f'*250^{truc}')} # print la variable int ({name}) \n")
-                            
                 case I.PRINTSTRING, name:
                     char = 0
                     start_index = self.variables_indexes[name]
@@ -126,14 +126,19 @@ class Generator:
                         data = self.variables[data["linked"]]
                 case I.IF, name, if_instructions:
                     index = self.variables_indexes[name]
-                    self.add_instructions(f"{goto_variables()}{'>'*(index+1)}[-{goto_start()}>+>+{goto_variables()}{'>'*(index+1)}] #load the value of {name} in ALWAYS_0 and IFTEMP \n")
-                    self.add_instructions(f"{goto_start()}>[-{goto_variables()}{'>'*(index+1)}+{goto_start()}>] #push back {name} in it's place and void ALWAYS_0\n")
-                    if_generateur = Generator(self.debug)
-                    if_generateur.variables = self.variables
-                    if_generateur.variables_indexes = self.variables_indexes
-                    if_generateur.generate(if_instructions)
-                    newline = "\n"
-                    self.add_instructions(f"{goto_start()}>> #start of the if \n[[-]{f'{newline}    '.join(if_generateur.instructions.split('CODE :')[1].split(newline))}{goto_start()}\n>]# end of the if\n")
+                    data = self.variables[index]
+                    if data["size"] == 8:
+                        index = self.variables_indexes[name]
+                        self.add_instructions(f"{goto_variables()}{'>'*(index+1)}[-{goto_start()}>+>+{goto_variables()}{'>'*(index+1)}] #load the value of {name} in ALWAYS_0 and IFTEMP \n")
+                        self.add_instructions(f"{goto_start()}>[-{goto_variables()}{'>'*(index+1)}+{goto_start()}>] #push back {name} in it's place and void ALWAYS_0\n")
+                        if_generateur = Generator(self.debug)
+                        if_generateur.variables = self.variables
+                        if_generateur.variables_indexes = self.variables_indexes
+                        if_generateur.generate(if_instructions)
+                        newline = "\n"
+                        self.add_instructions(f"{goto_start()}>> #start of the if \n[[-]{f'{newline}    '.join(if_generateur.instructions.split('CODE :')[1].split(newline))}{goto_start()}\n>]# end of the if\n")
+                    else:
+                        raise Exception("TODO : IF INT SIZE > 8")
                 case I.RAWPRINTSTRING, value:
                     # TODO : OPTIMISE AND DONT REDO ord(char) EACH TIME
                     to_show = ''.join([(x if x in 'abcdefghijklmnopqrstuvwxyz123456798ABCDEFGHIJKLMNOPQRSTUVWXYZ/*!:;§/?' else '|') for x in value])
@@ -186,9 +191,27 @@ class Generator:
                         new_to_remove = f"{copy_to_ram0}{compare_to_0}{do_truc_0}{put_back0}"
                         to_add = f"{goto_start()}>>>>>>>{'+'*abs(number)}[-{(new_to_add if number > 0 else new_to_remove)}{goto_start()}>>>>>>>]"
                         # TODO : prendre la boucle et faire des boucles multiples
-                        self.add_instructions(f"{goto_variables()}{'>'*(index+1)} {to_add} {f'add {number}' if number > 0 else f'remove {-number}'} to {name} \n")
+                        self.add_instructions(f"{to_add} {f'add {number}' if number > 0 else f'remove {-number}'} to {name}(8) \n")
+                    elif data["size"] == 16:
+                        # TODO : boucles
+                        copy = lambda nb : f"{goto_variables()}{'>'*(index+nb+1)}[-{goto_start()}>+>>+{goto_variables()}{'>'*(index+nb+1)}]"
+                        add_one = f"{goto_start()}>>>+"
+                        compare_to_250 = f"{goto_start()}>>>>------<[->-<]+>[<->[-]]"
+                        do_truc_250 = f"{goto_start()}>>+>[<->-<<[-]>>>>>>+<<<<<]"
+                        check_250 = f"{goto_start()}>>[[-]<+>]"
+                        put_back = lambda nb : f"{goto_start()}>[-{goto_variables()}{'>'*(index+nb+1)}+{goto_start()}>]"
+                        add_250_0 = f"{copy(0)}{add_one}{compare_to_250}{do_truc_250}{check_250}{put_back(0)}"
+                        add_250_1 = f"{goto_start()}>>>>>>>[[-]{copy(1)}{add_one}{compare_to_250}{do_truc_250}{check_250}{put_back(1)}]"
+                        reset = f"{goto_start()}>>>>>>>[-]"
+                        add = f"{add_250_0}{add_250_1}{reset}"
+                        if_0 = f"{goto_start()}>>+>[[-]<-<->>]<[[-]{goto_start()}>>>>>+{goto_start()}>>]{put_back(0)}"
+                        set_249 = f"{goto_start()}>>>>>[{goto_variables()}{'>'*(index+1)}[-]-------{goto_start()}>]"
+                        remove_250 = f"{goto_start()}>>>>>[{copy(1)}{goto_start()}>>+>[[-]<-<-{put_back(1)}{goto_start()}>]"
+                        check_0 = f"{goto_start()}>>[[-]{goto_variables()}{'>'*(index+2)}[-]-------{goto_start()}>>[-]]{goto_start()}>>>>>[-]]"
+                        remove = f"{copy(0)}{if_0}{set_249}{remove_250}{check_0}"
+                        self.add_instructions(f"{add if number > 0 else remove} {f'add {number}' if number > 0 else f'remove {-number}'} to {name}(16) \n")
                     else:
-                        raise Exception("TODO : CADD INT SIZE > 8")
+                        raise Exception("TODO : CADD INT SIZE > 16")
                 case I.ADD, var1, var2, to_store:
                     raise Exception("Do not use add : old function")
                 case I.WHILE, variable, while_instructions:

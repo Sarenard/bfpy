@@ -2,12 +2,18 @@ import sys
 
 MAX_SIZE = 255 # DO NOT CHANGE
 
+def simplify(code):
+    code = code.replace("[-]", "a")
+    code = code.replace("+[-<+]-", "b")
+    code = code.replace("+++[--->+++]---", "c")
+    return code
+
 def interpreter(code, debug):
-    code = ''.join(filter(lambda x: x in ['.', ',', '[', ']', '<', '>', '+', '-'], list(code)))
+    code = ''.join(filter(lambda x: x in ".,[]<>+-", list(code)))
+    code = simplify(code)
     bracemap = buildbracemap(code)
     cells, codeptr, cellptr = [0], 0, 0
     while codeptr < len(code):
-        if debug : print("[INTERPRETATION] :", cells, f"pointer sur {cellptr}")
         command = code[codeptr]
         if command == "+":
             cells[cellptr] = cells[cellptr] + 1 if cells[cellptr] < MAX_SIZE else 0
@@ -19,14 +25,22 @@ def interpreter(code, debug):
             cellptr += 1
             if cellptr == len(cells):
                 cells.append(0)
-        if command == "[" and cells[cellptr] == 0: codeptr = bracemap[codeptr]
-        if command == "]" and cells[cellptr] != 0: codeptr = bracemap[codeptr]
-        if command == ",":
+        elif command == "[" and cells[cellptr] == 0:
+            codeptr = bracemap[codeptr]
+        elif command == "]" and cells[cellptr] != 0:
+            codeptr = bracemap[codeptr]
+        elif command == ",":
             cells[cellptr] = ord(input())
         elif command == ".":
             sys.stdout.write(chr(cells[cellptr]))
+        elif command == "a":
+            cells[cellptr] = 0
+        elif command == "b":
+            cellptr = 0
+        elif command == "c":
+            cellptr = 12
         codeptr += 1
-    if debug : print("[INTERPRETATION] :", cells, f"pointer sur {cellptr}")
+        if debug : print("[INTERPRETATION] :", cells, f"pointer sur {cellptr}")
 
 def buildbracemap(code):
     temp_bracestack, bracemap = [], {}

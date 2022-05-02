@@ -1,18 +1,11 @@
-#declare int final
-#declare int a
-
-macro getinput input -48 a cadd end
-macro add_1 while 100 final cadd -1 a cadd end end
-macro add_10 while 10 final cadd -1 a cadd end end
-macro add_100 while 1 final cadd -1 a cadd end end
+#declare 16int a
+#declare 8int true
 
 macro main
-    a getinput
-    a add_1
-    a getinput
-    a add_10
-    a getinput
-    a add_100
-
-    final printint "\n" rawprintstring
+    1 true set
+    250 a set
+    true while
+        -1 a cadd
+        a printint "\n" rawprintstring
+    end
 end
