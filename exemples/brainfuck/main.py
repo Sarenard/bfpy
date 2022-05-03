@@ -29,9 +29,9 @@ def interpreter(code, debug):
             cells[cellptr] = ord(input())
         elif command == ".":
             sys.stdout.write(chr(cells[cellptr]))
-        if command == "D":
+        elif command == "D":
             debug = not debug
-        if command == "S":
+        elif command == "S":
             print("[STOPPED] :", cells, f"pointer sur {cellptr}", f"len = {len(cells)}")
             sys.exit(1)
         codeptr += 1
