@@ -13,7 +13,7 @@ def test(file):
 
 class File:
     def __init__(self, name, espected_output=b'', espected_error=b'', input=b''):
-        self.name = f"python main.py -f exemples/{name} -rp -stfu"
+        self.name = f"python main.py -f exemples/{name} -rc -stfu"
         self.espected_output  = espected_output
         self.espected_error   = espected_error
         self.input            = input
@@ -25,6 +25,7 @@ files_to_test = [
     File("equal01.bfr", b"0*250^0", b''),
     File("equal02.bfr", b"0*250^0", b''),
     File("equal1.bfr", b"1*250^0", b''),
+    File("carre16.bfr", b"Merci de rentrer un nombre a mettre au carre : le nombre au carre fait : 125*250^0 2*250^1\r\n", b''),
 ]
 for file in files_to_test:
     test(file)

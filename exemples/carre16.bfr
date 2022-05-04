@@ -14,16 +14,7 @@ macro add_100 while 1 final cadd -1 a cadd end end
 
 macro main
     "Merci de rentrer un nombre a mettre au carre :\N" rawprintstring
-    a getinput
-    a add_1
-    a getinput
-    a add_10
-    a getinput
-    a add_100
-    final while
-        -1 final cadd
-        1 x cadd
-    end
+    25 x set
     x while
         1 w cadd
         1 v cadd
