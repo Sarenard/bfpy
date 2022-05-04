@@ -209,20 +209,25 @@ class Generator:
                 case I.WHILE, variable, while_instructions:
                     index = self.variables_indexes[variable]
                     data = self.variables[index]
-                    if data["size"] == 8:
-                        self.add_instructions(f"{goto_variables()}{'>'*(index+1)}[-{goto_start()}>+>+{goto_variables()}{'>'*(index+1)}] #load the value of {variable} in ALWAYS_0 and IFTEMP \n")
-                        self.add_instructions(f"{goto_start()}>[-{goto_variables()}{'>'*(index+1)}+{goto_start()}>] #push back {variable} in it's place and void ALWAYS_0\n")
-                        while_generateur = Generator(self.debug)
-                        while_generateur.variables = self.variables
-                        while_generateur.variables_indexes = self.variables_indexes
-                        while_generateur.generate(while_instructions)
-                        newline = "\n"
-                        self.add_instructions(f"{goto_start()}>> [[-] #start of the while {f'{newline}    '.join(while_generateur.instructions.split('CODE :')[1].split(newline))}")
-                        self.add_instructions(f"{goto_variables()}{'>'*(index+1)}[-{goto_start()}>+>+{goto_variables()}{'>'*(index+1)}]{goto_start()}>[-{goto_variables()}{'>'*(index+1)}+{goto_start()}>] #reload la variable pour le while \n>]# end of the while\n")
-                    else:
-                        raise Exception("TODO : WHILE INT SIZE > 8")
+                    # raise Exception("TODO : WHILE INT SIZE > 8")
+                    load = lambda x : f"{f'{goto_start()}>>>+' if x == 0 else ''}{goto_start()}>>[>[-]]{goto_start()}>>>[{goto_variables()}{'>'*(index+x+1)}[-{goto_start()}>+>+{goto_variables()}{'>'*(index+x+1)}]{goto_start()}>[-{goto_variables()}{'>'*(index+x+1)}+{goto_start()}>]]"
+                    truc = 0
+                    load_var = f"{goto_start()}>>[-]"
+                    while not data["linked"] == 0:
+                        self.add_instructions(f"{load(truc)}")
+                        load_var += f"{load(truc)}"
+                        data, truc = self.variables[data["linked"]], truc+1
+                    self.add_instructions(f"{load(truc)}{goto_start()}>>>[-] #load de la valeur\n")
+                    load_var += f"{load(truc)}{goto_start()}>>>[-]"
+                    while_generateur = Generator(self.debug)
+                    while_generateur.variables, while_generateur.variables_indexes = self.variables, self.variables_indexes
+                    while_generateur.generate(while_instructions)
+                    newline = "\n"
+                    self.add_instructions(f"{goto_start()}>> [[-] #load variable and start of the while {f'{newline}    '.join(while_generateur.instructions.split('CODE :')[1].split(newline))}")
+                    self.add_instructions(f"{load_var} #reload la variable pour le while \n{goto_start()}>>]# end of the while\n")
                 case I.APPEND, name_list, name_value:
-                    if self.variables[self.variables_indexes[name_value]]["size"] == 8:
+                    data = self.variables[self.variables_indexes[name_value]]
+                    if data["size"] == 8:
                         value_index = self.variables_indexes[name_value]
                         list_index = self.variables_indexes[name_list]+1
                         goto_current = f"{goto_variables()}{'>'*(list_index+1)}++++++[------>++++++]------>"
@@ -232,10 +237,8 @@ class Generator:
                         store_value = f"{goto_start()}>[-{goto_value}+{goto_start()}>]{goto_current}[-]{goto_ram0}[-{goto_current}+{goto_ram0}] #store it in the right place\n"
                         move_cursor = f"{goto_current}<++++++>>------ #change the list current cursor\n"
                         add_to_len = f"{goto_variables()}{'>'*(self.variables_indexes[name_list]+1)}+ #add one to the len of the list\n"
-                        self.add_instructions(load_value)
-                        self.add_instructions(store_value)
-                        self.add_instructions(move_cursor)
-                        self.add_instructions(add_to_len)
+                        append = f"{load_value}{store_value}{move_cursor}{add_to_len}"
+                        self.add_instructions(append)
                     else:
                         raise Exception("TODO : APPEND INT SIZE > 8")
                 case I.REMOVE, name_list:

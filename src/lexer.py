@@ -14,10 +14,9 @@ class Lexer:
         self.instructions = []
         self.liste_included = []
         
-    def parse(self, instructions):
+    def parse(self, instructions):  # sourcery skip: raise-specific-error
         instructions = self.parse_includes(instructions)
         instructions = self.parse_macros(instructions)
-        
         instruction_index = 0
         while instruction_index < len(instructions):
             instruction = instructions[instruction_index]
@@ -31,19 +30,19 @@ class Lexer:
                     name = instructions[instruction_index + 2]
                     longueur = instructions[instruction_index + 3]
                     if int(longueur) > 249:
-                        raise Exception("liste de taillle 250 maximum")
+                        raise Exception("liste de taille 250 maximum")
                     self.instructions.append((I.DECLARE_LIST, name, longueur))
                     instruction_index += 3
                 elif instructions[instruction_index + 1] in ["int", "8int"]:
                     name = instructions[instruction_index + 2]
                     self.instructions.append((I.DECLARE_INT, name, 8))
                     instruction_index += 2
-                elif instruction[instruction_index + 1].split("int")[0] != "8":
+                elif instructions[instruction_index + 1].split("int")[0] != "8":
                     name = instructions[instruction_index + 2]
                     size = int(instructions[instruction_index + 1].split("int")[0])
-                    if not size % 8 == 0:
+                    if size % 8 != 0:
                         raise Exception("Size of int must be divisible by 8")
-                    self.instructions.append((I.DECLARE_INT, name, int(size)))
+                    self.instructions.append((I.DECLARE_INT, name, size))
                     instruction_index += 2
             elif instruction == "remove":
                 name = instructions[instruction_index - 1]
@@ -138,7 +137,7 @@ class Lexer:
                 self.instructions.append((I.GETLEN, list_name, int_name))
 
             instruction_index += 1
-            
+
         if self.debug : print("[DEBUG LEXER] instructions :", self.instructions)
         
     def check_for_infinite_loop(self):  # sourcery skip: raise-specific-error
