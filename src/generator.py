@@ -133,10 +133,9 @@ class Generator:
                     else:
                         raise Exception("TODO : IF INT SIZE > 8")
                 case I.RAWPRINTSTRING, value:
-                    # TODO : OPTIMISE AND DONT REDO ord(char) EACH TIME
                     to_show = ''.join([(x if x in 'abcdefghijklmnopqrstuvwxyz123456798ABCDEFGHIJKLMNOPQRSTUVWXYZ/*!:;§/?' else '|') for x in value])
                     self.add_instructions(f"PRINT 1 TIME STRING \"{to_show}\" : ")
-                    to_print = "".join([f"{'+'*ord(char)}.[-]" for char in value])
+                    to_print = f"[-]{'+'*ord(value[0])}."+"".join([f"{-nb*'+' if nb < 0 else nb*'-'}." for nb in [ord(value[x-1])-ord(value[x]) for x in range(1, len(value))]])+"[-]"
                     self.add_instructions(f"{goto_start()} > {to_print}\n")
                 case I.LOAD, load_to, what_to_load:
                     load_to = int(load_to[3:])
