@@ -181,8 +181,8 @@ class Generator:
                         put_back = f"{goto_start()}>[-{goto_variables()}{'>'*(index+1)}+{goto_start()}>]"
                         new_to_add = f"{copy_to_ram0}{add_one}{compare_to_250}{do_truc_250}{put_back}"
                         new_to_remove = f"{copy_to_ram0}{compare_to_0}{do_truc_0}{put_back0}"
-                        to_add = f"{goto_start()}>>>>>>>{'+'*abs(number)}[-{(new_to_add if number > 0 else new_to_remove)}{goto_start()}>>>>>>>]"
                         # TODO : prendre la boucle et faire des boucles multiples
+                        to_add = f"{goto_start()}>>>>>>>{'+'*abs(number)}[-{(new_to_add if number > 0 else new_to_remove)}{goto_start()}>>>>>>>]"
                         self.add_instructions(f"{to_add} {f'add {number}' if number > 0 else f'remove {-number}'} to {name}(8) \n")
                     elif data["size"] == 16:
                         # TODO : faire ça dans une boucle   
