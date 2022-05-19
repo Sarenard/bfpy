@@ -170,6 +170,7 @@ class Generator:
                     number = int(number)
                     index = self.variables_indexes[name]
                     data = self.variables[index]
+                    # TODO : generalise to every data size
                     if data["size"] == 8:
                         copy_to_ram0 = f"{goto_variables()}{'>'*(index+1)}[-{goto_start()}>+>>+{goto_variables()}{'>'*(index+1)}]"
                         add_one = f"{goto_start()}>>>+"
