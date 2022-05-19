@@ -9,7 +9,7 @@ goto_start = lambda : "+[-<+]-"
 goto_anchor = lambda value : f"{goto_start()}{'+'*value}[{'-'*value}>{'+'*value}]{'-'*value}"
 goto_pile = lambda : goto_anchor(2)
 goto_variables = lambda : goto_anchor(3)
-to_char = lambda string : f"{goto_start()}>{'.[-]'.join(['+'*ord(x) for x in string])}.[-]"
+to_print = lambda value :  f"[-]{'+'*ord(value[0])}."+"".join([f"{-nb*'+' if nb < 0 else nb*'-'}." for nb in [ord(value[x-1])-ord(value[x]) for x in range(1, len(value))]])+"[-]"
 
 NOMBRE_DE_RAMS = 10
 assert NOMBRE_DE_RAMS >= 10, "Nombre de RAMs insuffisant, merci de mettre 10 minimum"
@@ -104,10 +104,10 @@ class Generator:
                     data = self.variables[index]
                     truc = 0
                     while not data["linked"] == 0:
-                        self.add_instructions(f"{print_case(index)}{to_char(f'*250^{truc} ')}")
+                        self.add_instructions(f"{print_case(index)}{to_print(f'*250^{truc} ')}")
                         index, truc, data = index+1, truc+1, self.variables[index+1]
                     data = self.variables[data["linked"]]
-                    self.add_instructions(f"{print_case(index)}{to_char(f'*250^{truc}')} # print la variable int ({name}) \n")
+                    self.add_instructions(f"{print_case(index)}{to_print(f'*250^{truc}')} # print la variable int ({name}) \n")
                 case I.PRINTSTRING, name:
                     char = 0
                     start_index = self.variables_indexes[name]
@@ -136,8 +136,7 @@ class Generator:
                 case I.RAWPRINTSTRING, value:
                     to_show = ''.join([(x if x in 'abcdefghijklmnopqrstuvwxyz123456798ABCDEFGHIJKLMNOPQRSTUVWXYZ/*!:;§/?' else '|') for x in value])
                     self.add_instructions(f"PRINT 1 TIME STRING \"{to_show}\" : ")
-                    to_print = f"[-]{'+'*ord(value[0])}."+"".join([f"{-nb*'+' if nb < 0 else nb*'-'}." for nb in [ord(value[x-1])-ord(value[x]) for x in range(1, len(value))]])+"[-]"
-                    self.add_instructions(f"{goto_start()} > {to_print}\n")
+                    self.add_instructions(f"{goto_start()} > {to_print(value)}\n")
                 case I.LOAD, load_to, what_to_load:
                     load_to = int(load_to[3:])
                     index = self.variables_indexes[what_to_load]
@@ -247,7 +246,8 @@ class Generator:
                     self.add_instructions(f"{goto_variables()}{'>'*(list_index+1)}++++++[------>++++++]------<[-]>++++++<<------#remove the last element of {name_list}\n")
                     self.add_instructions(f"{goto_variables()}{'>'*(self.variables_indexes[name_list]+1)}- #remove one to the len of the list\n")
                 case I.GETLEN, name_list, int_name:
-                    if self.variables[self.variables_indexes[int_name]]["size"] == 8:
+                    data = self.variables[self.variables_indexes[int_name]]
+                    if data["size"] == 8:
                         list_index = self.variables_indexes[name_list]
                         int_index = self.variables_indexes[int_name]
                         goto_len_list = f"{goto_variables()}{'>'*(list_index+1)}"
