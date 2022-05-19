@@ -42,6 +42,7 @@ class Generator:
                         for i in range(int(size/8)):
                             self.variables[len(self.variables)] = {"type" : Types.INT, "name" : name, "value" : value, "size" : size, "linked" : (len(self.variables)+1 if int(size/8) != i+1 else 0), "position" : len(self.variables)}
                 case I.DECLARE_STR, name, longueur:
+                    # TODO : NULL TERMINATED STRING + LENGTH TO SUPPORT EASELY ADDING THEM
                     start_index = len(self.variables)
                     for i in range(int(longueur)):
                         self.variables[len(self.variables)] = {"type" : Types.STR, "name" : name, "value" : "", "linked" : (len(self.variables)+1 if i != int(longueur)-1 else 0), "position" : len(self.variables)}
@@ -254,6 +255,31 @@ class Generator:
                         self.add_instructions(f"{goto_start()}>>>[-{goto_int}+{goto_start()}>>>] #put it in the int\n")
                     else:
                         raise Exception("TODO : GETLEN INT SIZE > 8")
+                case I.TAKEPART, name_var, part, where_to_store:
+                    if self.variables[self.variables_indexes[where_to_store]]["size"] == 8:
+                        var_index = self.variables_indexes[name_var]
+                        case_size = self.variables[var_index]["size"]//8-1
+                        if part > case_size:
+                            raise Exception(f"Can't take the part {part} of an int with size {case_size}")
+                        to_store_index = self.variables_indexes[where_to_store]
+                        goto_var = f"{goto_variables()}{'>'*(var_index+1+part)}"
+                        goto_store = f"{goto_variables()}{'>'*(to_store_index+1)}"
+                        self.add_instructions(f"{goto_store}[-]")
+                        self.add_instructions(f"{goto_var}[-{goto_start()}>+>+{goto_var}]{goto_start()}>[-{goto_var}+{goto_start()}>]")
+                        self.add_instructions(f"{goto_start()}>>[-{goto_store}+{goto_start()}>>] # store part {part} of {name_var} into {where_to_store}\n")
+                    else:
+                        raise Exception("Can't store a part of an int in a non 8 bit int !")
+                case I.SETPART, name_var, part, where_to_store:
+                    if self.variables[self.variables_indexes[where_to_store]]["size"] == 8:
+                        var_index = self.variables_indexes[name_var]
+                        to_store_index = self.variables_indexes[where_to_store]
+                        goto_var = f"{goto_variables()}{'>'*(var_index+1+part)}"
+                        goto_store = f"{goto_variables()}{'>'*(to_store_index+1)}"
+                        self.add_instructions(f"{goto_var}[-]")
+                        self.add_instructions(f"{goto_store}[-{goto_start()}>+>+{goto_store}]{goto_start()}>[-{goto_store}+{goto_start()}>]")
+                        self.add_instructions(f"{goto_start()}>>[-{goto_var}+{goto_start()}>>] # store part {part} of {name_var} into {where_to_store}\n")
+                    else:
+                        raise Exception("Can't set from an non 8 bit int !")
     
     def add_instructions(self, instructions):
         self.instructions += instructions

@@ -111,6 +111,16 @@ class Lexer:
                 var2 = instructions[instruction_index - 2]
                 to_store = instructions[instruction_index - 3]
                 self.instructions.append((I.ADD, var1, var2, to_store))
+            elif instruction == "takepart":
+                part = int(instructions[instruction_index - 1])
+                name_var = instructions[instruction_index - 2]
+                where_to_store = instructions[instruction_index - 3]
+                self.instructions.append((I.TAKEPART, name_var, part, where_to_store))
+            elif instruction == "setpart":
+                part = int(instructions[instruction_index - 1])
+                name_var = instructions[instruction_index - 2]
+                where_to_store = instructions[instruction_index - 3]
+                self.instructions.append((I.SETPART, name_var, part, where_to_store))
             elif instruction == "while":
                 name = instructions[instruction_index-1]
                 temp_instructions = ""

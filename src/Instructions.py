@@ -14,6 +14,8 @@ class I(IntEnum):
     INPUT = auto()
     APPEND = auto()
     REMOVE = auto()
+    TAKEPART = auto()
+    SETPART = auto()
     
     IF = auto()
     WHILE = auto()

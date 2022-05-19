@@ -1,55 +1,12 @@
-#declare int a
-#declare 16int x
-#declare 16int y
-#declare 16int w
-#declare 16int v
-#declare 16int u
-
-#declare int final
-
-macro getinput input -48 a cadd end
-macro add_1 while 100 final cadd -1 a cadd end end
-macro add_10 while 10 final cadd -1 a cadd end end
-macro add_100 while 1 final cadd -1 a cadd end end
+#declare 16int value
+#declare 16int value2
+#declare 8int v1
+#declare 8int v2
 
 macro main
-    "Merci de rentrer un nombre a mettre au carre :\N" rawprintstring
-    a getinput
-    a add_1
-    a getinput
-    a add_10
-    a getinput
-    a add_100
-    final while
-        -1 final cadd
-        1 x cadd
-    end
-    x while
-        1 w cadd
-        1 v cadd
-        1 y cadd
-        -1 x cadd
-    end
-    w while
-            1 x cadd
-        -1 w cadd
-    end
-    -1 y cadd
-    y while 
-        v while
-            1 w cadd
-            1 u cadd
-            -1 v cadd
-        end
-        u while
-            1 v cadd
-            -1 u cadd
-        end
-        w while
-            1 x cadd
-            -1 w cadd
-        end
-        -1 y cadd
-    end
-    "le nombre au carre fait :\N" rawprintstring x printint "\n" rawprintstring
-end 
+    252 value set
+    v1 value 0 takepart
+    v2 value 1 takepart
+    v1 value2 0 setpart 
+    v2 value2 1 setpart 
+end
