@@ -42,10 +42,15 @@ class Generator:
                         for i in range(int(size/8)):
                             self.variables[len(self.variables)] = {"type" : Types.INT, "name" : name, "value" : value, "size" : size, "linked" : (len(self.variables)+1 if int(size/8) != i+1 else 0), "position" : len(self.variables)}
                 case I.DECLARE_STR, name, longueur:
-                    # TODO : NULL TERMINATED STRING + LENGTH TO SUPPORT EASELY ADDING THEM
                     start_index = len(self.variables)
                     for i in range(int(longueur)):
                         self.variables[len(self.variables)] = {"type" : Types.STR, "name" : name, "value" : "", "linked" : (len(self.variables)+1 if i != int(longueur)-1 else 0), "position" : len(self.variables)}
+                    self.variables_indexes[name] = start_index
+                case I.DECLARE_STRN, name, longueur:
+                    # TODO : NULL TERMINATED STRING HERE
+                    start_index = len(self.variables)
+                    for i in range(int(longueur)+1): # +1 for the null
+                        self.variables[len(self.variables)] = {"type" : Types.STRN, "name" : name, "value" : "", "linked" : (len(self.variables)+1 if i != int(longueur)-1 else 0), "position" : len(self.variables)}
                     self.variables_indexes[name] = start_index
                 case I.DECLARE_LIST, name, longueur:
                     # TODO : CHANGE THE 2N COMPLEXITY TO A N+1 COMPLEXITY
@@ -90,6 +95,19 @@ class Generator:
                             else:
                                 self.add_instructions(f"ILLEGAL TO PRINT : {goto_variables()} {'>'*(index+1)} [-] {'+'*int(nb)}\n")
                             data = self.variables[data["linked"]]
+                    if data["type"] == Types.STRN:
+                        toshow = value.replace('\n', '\\n')
+                        self.add_instructions(f"# set la variable str ({name}) a \"{toshow.replace(',', ' ').replace('+', ' ').replace('-', ' ').replace('.', ' ').replace('[', ' ').replace(']', ' ').replace('>', ' ').replace('<', ' ')}\"\n")
+                        for i in range(len(value)):
+                            data["value"] = value[i]
+                            index = data["position"]
+                            nb = ord(value[i])
+                            if value[i] in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789?/;:":
+                                self.add_instructions(f"{value[i]} : {goto_variables()} {'>'*(index+1)} [-] {'+'*int(nb)}\n")
+                            else:
+                                self.add_instructions(f"ILLEGAL TO PRINT : {goto_variables()} {'>'*(index+1)} [-] {'+'*int(nb)}\n")
+                            data = self.variables[data["linked"]]
+                        self.add_instructions(f"NULL : {goto_variables()} {'>'*(index+1+1)} [-] --\n")
                 case I.PRINTINTEGER, name:
                     index = self.variables_indexes[name]
                     data = self.variables[index]

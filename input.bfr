@@ -1,12 +1,5 @@
-#declare 16int value
-#declare 16int value2
-#declare 8int v1
-#declare 8int v2
+#declare strn test 4
 
 macro main
-    252 value set
-    v1 value 0 takepart
-    v2 value 1 takepart
-    v1 value2 0 setpart 
-    v2 value2 1 setpart 
+    "test" test set
 end

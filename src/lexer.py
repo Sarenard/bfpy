@@ -1,3 +1,4 @@
+import contextlib
 from src.Instructions import I
 
 # config
@@ -14,17 +15,22 @@ class Lexer:
         self.instructions = []
         self.liste_included = []
         
-    def parse(self, instructions):  # sourcery skip: raise-specific-error
+    def parse(self, instructions):  # sourcery skip: low-code-quality, raise-specific-error
         instructions = self.parse_includes(instructions)
         instructions = self.parse_macros(instructions)
         instruction_index = 0
         while instruction_index < len(instructions):
             instruction = instructions[instruction_index]
             if instruction == "#declare":
-                if instructions[instruction_index + 1] == "str":
+                if instructions[instruction_index + 1] in ["str", "string"]:
                     name = instructions[instruction_index + 2]
                     longueur = instructions[instruction_index + 3]
                     self.instructions.append((I.DECLARE_STR, name, longueur))
+                    instruction_index += 3
+                elif instructions[instruction_index + 1] in ["strn", "stringn"]:
+                    name = instructions[instruction_index + 2]
+                    longueur = instructions[instruction_index + 3]
+                    self.instructions.append((I.DECLARE_STRN, name, longueur))
                     instruction_index += 3
                 elif instructions[instruction_index + 1] == "list":
                     name = instructions[instruction_index + 2]
@@ -198,7 +204,9 @@ class Lexer:
             self.check_for_infinite_loop()
             instructions = self.parse_includes(instructions)
         return instructions
-    def parse_macros(self, content, macros_total=[]):  # sourcery no-metrics skip: comprehension-to-generator, default-mutable-arg, hoist-statement-from-if, swap-nested-ifs
+    def parse_macros(self, content, macros_total = None):  # sourcery no-metrics skip: comprehension-to-generator, default-mutable-arg, hoist-statement-from-if, swap-nested-ifs
+        if macros_total is None:
+            macros_total = []
         if "iteration" not in globals() : globals()["iteration"]=1
         else: globals()["iteration"] += 1
         if self.debug : print(f"[DEBUG LEXER] macros avant (iteration {globals()['iteration']}) :", content)
@@ -216,10 +224,8 @@ class Lexer:
             if content[i] == "end":
                 if end_compteur == 0:
                     macro_en_cours = False
-                    try:
+                    with contextlib.suppress(Exception):
                         macros_total.append((macro_temp[1], macro_temp[2:]))
-                    except:
-                        pass
                     macro_temp = []
                 else:
                     end_compteur -= 1
@@ -236,7 +242,7 @@ class Lexer:
                 content_remplacement.append(item)
         content = content_remplacement
         if self.debug : print(f"[DEBUG LEXER] macros après (iteration {globals()['iteration']}) :", content)
-        if sum([macro[0] == content[i] for macro in macros_total for i in range(len(content))]):
+        if sum(macro[0] == content[i] for macro in macros_total for i in range(len(content))):
             self.total_macros += 1
             self.check_for_infinite_loop()
             content = self.parse_macros(content, macros_total)
