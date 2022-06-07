@@ -84,6 +84,7 @@ class Generator:
                         valeurs = [eval(f"{value}{'//250'*r}%250") for r in range(0, int(data["size"]/8))]
                         self.add_instructions(f"{goto_variables()} {'>'*(start_index+1)} [-] {'>'.join(['+'*int(valeur) for valeur in valeurs])} # set la variable int ({name}) a {int(value)} \n")
                     if data["type"] == Types.STR:
+                        # TODO : editer tout le string
                         toshow = value.replace('\n', '\\n')
                         self.add_instructions(f"# set la variable str ({name}) a \"{toshow.replace(',', ' ').replace('+', ' ').replace('-', ' ').replace('.', ' ').replace('[', ' ').replace(']', ' ').replace('>', ' ').replace('<', ' ')}\"\n")
                         for i in range(len(value)):
@@ -96,18 +97,21 @@ class Generator:
                                 self.add_instructions(f"ILLEGAL TO PRINT : {goto_variables()} {'>'*(index+1)} [-] {'+'*int(nb)}\n")
                             data = self.variables[data["linked"]]
                     if data["type"] == Types.STRN:
-                        toshow = value.replace('\n', '\\n')
-                        self.add_instructions(f"# set la variable str ({name}) a \"{toshow.replace(',', ' ').replace('+', ' ').replace('-', ' ').replace('.', ' ').replace('[', ' ').replace(']', ' ').replace('>', ' ').replace('<', ' ')}\"\n")
-                        for i in range(len(value)):
-                            data["value"] = value[i]
-                            index = data["position"]
-                            nb = ord(value[i])
-                            if value[i] in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789?/;:":
-                                self.add_instructions(f"{value[i]} : {goto_variables()} {'>'*(index+1)} [-] {'+'*int(nb)}\n")
-                            else:
-                                self.add_instructions(f"ILLEGAL TO PRINT : {goto_variables()} {'>'*(index+1)} [-] {'+'*int(nb)}\n")
-                            data = self.variables[data["linked"]]
-                        self.add_instructions(f"NULL : {goto_variables()} {'>'*(index+1+1)} [-] --\n")
+                        if value == "":
+                            pass
+                        else:
+                            toshow = value.replace('\n', '\\n')
+                            self.add_instructions(f"# set la variable str ({name}) a \"{toshow.replace(',', ' ').replace('+', ' ').replace('-', ' ').replace('.', ' ').replace('[', ' ').replace(']', ' ').replace('>', ' ').replace('<', ' ')}\"\n")
+                            for i in range(len(value)):
+                                data["value"] = value[i]
+                                index = data["position"]
+                                nb = ord(value[i])
+                                if value[i] in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789?/;:":
+                                    self.add_instructions(f"{value[i]} : {goto_variables()} {'>'*(index+1)} [-] {'+'*int(nb)}\n")
+                                else:
+                                    self.add_instructions(f"ILLEGAL TO PRINT : {goto_variables()} {'>'*(index+1)} [-] {'+'*int(nb)}\n")
+                                data = self.variables[data["linked"]]
+                            self.add_instructions(f"NULL : {goto_variables()} {'>'*(index+1+1)} [-] --\n")
                 case I.PRINTINTEGER, name:
                     index = self.variables_indexes[name]
                     data = self.variables[index]

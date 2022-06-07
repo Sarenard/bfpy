@@ -61,14 +61,14 @@ int main(int argc, char **argv)
  
     if (ifd!=stdin) fclose(ifd);
 
-    for (p = pgm; p; p = p->next) {
-        if (p->cmd == '[' && p->next->cmd == '-' && p->next->next->cmd == ']') { /* replace each [-] with an a */
-            p->cmd = 'a'; p->next->cmd = 0; p->next->next->cmd = 0;}
-        else if (p->cmd == '[' && p->next->cmd == '+' && p->next->next->cmd == ']') { /* replace each [+] with an a */
-            p->cmd = 'a'; p->next->cmd = 0; p->next->next->cmd = 0;}
+    // for (p = pgm; p; p = p->next) {
+    //     if (p->cmd == '[' && p->next->cmd == '-' && p->next->next->cmd == ']') { /* replace each [-] with an a */
+    //         p->cmd = 'a'; p->next->cmd = 0; p->next->next->cmd = 0;}
+    //     else if (p->cmd == '[' && p->next->cmd == '+' && p->next->next->cmd == ']') { /* replace each [+] with an a */
+    //         p->cmd = 'a'; p->next->cmd = 0; p->next->next->cmd = 0;}
         // else if (p->cmd == '+' && p->next->cmd == '[' && p->next->next->cmd == '-' && p->next->next->next->cmd == '<' && p->next->next->next->next->cmd == '+' && p->next->next->next->next->next->cmd == ']' && p->next->next->next->next->next->next->cmd == '-') { /* replace each +[-<+]- with an b */
         //     p->cmd = 'b'; p->next->cmd = 0; p->next->next->cmd = 0; p->next->next->next->cmd = 0; p->next->next->next->next->cmd = 0; p->next->next->next->next->next->cmd = 0; p->next->next->next->next->next->next->cmd = 0;}
-    }
+    // }
     
     // for (p=pgm; p; p=p->next) {
     //     printf("%c", p->cmd);
@@ -103,8 +103,8 @@ int main(int argc, char **argv)
                 }
                 m=m->next;
                 break;
-            case 'a':
-                m->val = 0;
+            // case 'a':
+            //     m->val = 0;
             // case 'b':
             //     do {
             //         if (!(n=n->next)) {
