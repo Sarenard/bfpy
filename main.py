@@ -15,6 +15,7 @@ parser.add_argument('-di', '--debuginterpreteur', help='mode debug', required=Fa
 parser.add_argument('-rc', '--runc', help='mode debug', required=False, action='store_true')
 parser.add_argument('-rp', '--runp', help='mode debug', required=False, action='store_true')
 parser.add_argument('-stfu', '--stfu', help='mode debug', required=False, action='store_true')
+parser.add_argument('-c', '--clean', help='sans commentaires', required=False, action='store_true')
 args = parser.parse_args()
 
 code = open(args.file, "r").read()
@@ -29,6 +30,8 @@ instructions = lexer.instructions
 generator = Generator(args.debug)
 generator.generate(instructions)
 instructions = generator.instructions
+if args.clean:
+    instructions = "".join(x for x in list(instructions) if x in "+-<>[].,")
 with open("sortie.bf", "w") as f:
     f.write(instructions)
 if not args.stfu : print(f"[INFO] : Génération du code terminée en {time.time() - t} secondes")
