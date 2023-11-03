@@ -40,7 +40,7 @@ if not args.stfu : print("[INFO] : Execution du code")
 
 t = time.time()
 if args.runc:
-    os.system(".\src\interpreteur.exe .\sortie.bf")
+    os.system("./src/interpreteur.exe ./sortie.bf")
 if args.runp:
     from src.interpreteur import interpreter
     interpreter(instructions, args.debuginterpreteur)
